@@ -1,0 +1,25 @@
+﻿<Window
+    x:Class="DatenTresorNET.BaseFunction.NotificationWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="NotificationWindow"
+    Width="500"
+    Height="230"
+    WindowStartupLocation="CenterOwner"
+    mc:Ignorable="d">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome />
+    </WindowChrome.WindowChrome>
+
+
+    <Grid Background="WhiteSmoke">
+        <TextBlock
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            FontSize="32"
+            Text="Content Area für UserControl" />
+    </Grid>
+</Window>
