@@ -28,7 +28,7 @@
                         GlassFrameThickness="0"
                         NonClientFrameEdges="None"
                         ResizeBorderThickness="5"
-                        UseAeroCaptionButtons="True" />
+                        UseAeroCaptionButtons="False" />
                 </Setter.Value>
             </Setter>
         </Style>
@@ -55,7 +55,7 @@
             </Grid.ColumnDefinitions>
             <Menu Grid.Row="1" Grid.Column="0">
                 <MenuItem Header="File">
-                    <MenuItem Header="_New" />
+                    <MenuItem Header="_Beenden" x:Name="MenuExit" Click="MenuExit_Click"/>
                     <MenuItem Header="_Open" />
                     <MenuItem Header="_Save" />
                     <Separator />

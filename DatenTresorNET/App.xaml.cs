@@ -44,13 +44,13 @@
         {
             base.OnStartup(e);
 
-            try
-            {
-                /* Main Window aufrufen */
-                MainWindow mainWindow = new MainWindow();
-                this.MainWindow = mainWindow;
-                mainWindow.Visibility = Visibility.Hidden;
+            /* Main Window aufrufen */
+            MainWindow mainWindow = new MainWindow();
+            this.MainWindow = mainWindow;
+            mainWindow.Visibility = Visibility.Hidden;
 
+            try
+            { 
                 /* StartScreen Window aufrufen */
                 StartScreen startScreen = new StartScreen();
                 if (startScreen.ShowDialog() == false)
@@ -65,10 +65,6 @@
                     startScreen.Close();
                     startScreen = null;
                 }
-
-                mainWindow.Activate();
-                mainWindow.Show();
-                mainWindow.Visibility = Visibility.Visible;
             }
             catch (Exception ex)
             {

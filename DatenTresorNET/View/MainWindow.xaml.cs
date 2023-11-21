@@ -10,6 +10,12 @@
         public MainWindow()
         {
             this.InitializeComponent();
+            WeakEventManager<Window, RoutedEventArgs>.AddHandler(this, "Loaded", this.OnLoaded);
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            /* Ausführen, wenn der Dialog geladen wurde */
         }
     }
 }

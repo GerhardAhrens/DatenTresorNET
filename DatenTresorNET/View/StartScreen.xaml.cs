@@ -1,18 +1,9 @@
 ﻿namespace DatenTresorNET.View
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    using System.Security.Cryptography.Xml;
     using System.Windows;
     using System.Windows.Controls;
-    using System.Windows.Data;
-    using System.Windows.Documents;
-    using System.Windows.Input;
-    using System.Windows.Media;
-    using System.Windows.Media.Imaging;
-    using System.Windows.Shapes;
 
     /// <summary>
     /// Interaktionslogik für StartScreen.xaml
@@ -21,7 +12,29 @@
     {
         public StartScreen()
         {
-            InitializeComponent();
+            this.InitializeComponent();
+
+            WeakEventManager<Window, RoutedEventArgs>.AddHandler(this, "Loaded", this.OnLoaded);
+            WeakEventManager<MenuItem, RoutedEventArgs>.AddHandler(this.MenuExit, "Click", this.MenuExit_Click);
+
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void MenuExit_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.IsActive == true)
+            {
+                this.DialogResult = false;
+                this.Close();
+            }
+        }
+
+        private void OnApplicationStart(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = true;
         }
     }
 }
