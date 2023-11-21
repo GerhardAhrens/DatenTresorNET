@@ -4,6 +4,7 @@
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
+    using System.Security.Cryptography.Xml;
     using System.Text;
     using System.Windows;
     using System.Windows.Markup;
@@ -51,6 +52,19 @@
                 mainWindow.Visibility = Visibility.Hidden;
 
                 /* StartScreen Window aufrufen */
+                StartScreen startScreen = new StartScreen();
+                if (startScreen.ShowDialog() == false)
+                {
+                    ApplicationExit();
+                }
+                else
+                {
+                    mainWindow.Activate();
+                    mainWindow.Show();
+                    mainWindow.Visibility = Visibility.Visible;
+                    startScreen.Close();
+                    startScreen = null;
+                }
 
                 mainWindow.Activate();
                 mainWindow.Show();

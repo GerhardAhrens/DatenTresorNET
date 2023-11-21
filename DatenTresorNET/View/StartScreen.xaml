@@ -28,7 +28,7 @@
                         GlassFrameThickness="0"
                         NonClientFrameEdges="None"
                         ResizeBorderThickness="5"
-                        UseAeroCaptionButtons="False" />
+                        UseAeroCaptionButtons="True" />
                 </Setter.Value>
             </Setter>
         </Style>
@@ -45,13 +45,30 @@
     <Border Style="{DynamicResource ResourceKey=StartScreenBorderStyle}">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="70" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="40" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="40" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
+            <Menu Grid.Row="1" Grid.Column="0">
+                <MenuItem Header="File">
+                    <MenuItem Header="_New" />
+                    <MenuItem Header="_Open" />
+                    <MenuItem Header="_Save" />
+                    <Separator />
+                    <MenuItem Header="_Exit" />
+                </MenuItem>
+            </Menu>
+
+            <Button
+                Grid.Row="2"
+                Grid.Column="0"
+                Width="100"
+                Height="30"
+                Content="Test" />
         </Grid>
     </Border>
 </Window>
