@@ -36,5 +36,10 @@
         {
             this.DialogResult = true;
         }
+
+        private void MenuSettings_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
