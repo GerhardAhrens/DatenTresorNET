@@ -141,7 +141,7 @@
             </Grid>
 
             <Menu Grid.Row="1" Grid.Column="0">
-                <MenuItem Header="Applikation">
+                <MenuItem Header="Applikation" Tag="IconApplication">
                     <MenuItem
                         x:Name="MenuSettings"
                         Click="MenuSettings_Click"
@@ -155,7 +155,7 @@
                         Tag="IconExit" />
                 </MenuItem>
 
-                <MenuItem Header="Datentresor">
+                <MenuItem Header="Datentresor" Tag="IconDatabase">
                     <MenuItem
                         x:Name="MenuDTCreate"
                         Header="_Erstellen"
@@ -206,6 +206,22 @@
                         BorderThickness="1"
                         CornerRadius="2">
                         <TextBlock Margin="3" Text="Neue Datenbank erstellen" />
+                    </Border>
+                </GroupBox.Header>
+            </GroupBox>
+
+            <GroupBox
+                x:Name="gbFoundDatabase"
+                Grid.Row="2"
+                Margin="20"
+                Visibility="{Binding Path=ShowDatabase.Value, UpdateSourceTrigger=PropertyChanged}">
+                <GroupBox.Header>
+                    <Border
+                        Background="#F2F2F2"
+                        BorderBrush="Black"
+                        BorderThickness="1"
+                        CornerRadius="2">
+                        <TextBlock Margin="3" Text="Datenbank auswählen" />
                     </Border>
                 </GroupBox.Header>
             </GroupBox>
