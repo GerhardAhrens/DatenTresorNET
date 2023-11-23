@@ -10,6 +10,7 @@
     using System.Windows.Markup;
     using System.Windows.Threading;
 
+    using DatenTresorNET.Core;
     using DatenTresorNET.View;
 
     /// <summary>
@@ -40,9 +41,21 @@
             App.Current.DispatcherUnhandledException += this.OnDispatcherUnhandledException;
         }
 
+        /// <summary>
+        /// Festlegung für Abfrage des Programmendedialog
+        /// </summary>
+        public static bool ExitApplicationQuestion { get; set; }
+
+        /// <summary>
+        /// Festlegung für das Speichern der Position des Main-Windows
+        /// </summary>
+        public static bool SaveLastWindowsPosition { get; set; }
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            /* Einstellungen für Applikation und Datenbank in gestrennten Settingsdateien*/
+            InitializeSettings();
 
             /* Main Window aufrufen */
             MainWindow mainWindow = new MainWindow();
@@ -133,6 +146,24 @@
 
             FrameworkPropertyMetadata frameworkMetadata = new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(new CultureInfo(language).IetfLanguageTag));
             FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement), frameworkMetadata);
+        }
+
+        private static void InitializeSettings()
+        {
+            using (ApplicationSettings settings = new ApplicationSettings())
+            {
+                if (settings.IsExitSettings() == false)
+                {
+                    settings.LastAccess = DateTime.Now;
+                    settings.LastUser = UserInfo.TS().CurrentDomainUser;
+                    settings.Save();
+                }
+
+                settings.Load();
+
+                App.ExitApplicationQuestion = settings.ExitApplicationQuestion;
+                App.SaveLastWindowsPosition = settings.SaveLastWindowsPosition;
+            }
         }
 
         // <summary>

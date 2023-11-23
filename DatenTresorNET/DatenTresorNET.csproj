@@ -15,6 +15,7 @@
   <ItemGroup>
     <Folder Include="BaseFunction\Pattern\Disposable\" />
     <Folder Include="BaseFunction\Settings\" />
+    <Folder Include="Core\Settings\" />
   </ItemGroup>
 
 </Project>
