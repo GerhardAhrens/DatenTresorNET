@@ -15,10 +15,14 @@
     Opacity="1"
     ResizeMode="NoResize"
     Style="{DynamicResource ResourceKey=CustomWindowStyle}"
+    Tag="{DynamicResource ResourceKey=IconExcelCtrl}"
     TextOptions.TextFormattingMode="Display"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d">
+    <Window.Icon>
+        <DrawingImage Drawing="{Binding Tag.Drawing, RelativeSource={RelativeSource AncestorType=Window}}" />
+    </Window.Icon>
 
     <Control.Resources>
         <localConverter:StaticResourceConverter x:Key="StaticResourceConverter" />
