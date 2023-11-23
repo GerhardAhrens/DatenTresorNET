@@ -6,6 +6,14 @@
     <Application.Resources>
         <ResourceDictionary>
             <Style x:Key="Test1" TargetType="TextBox" />
+
+            <ResourceDictionary.MergedDictionaries>
+                <!--  Alle Styles sammeln und mergen  -->
+                <!--  Lokale Styles  -->
+                <ResourceDictionary Source="Resources\XamlIcon\XamlIconViewBox.xaml" />
+
+                <!--  Externe Styles aus Bibliotheken  -->
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

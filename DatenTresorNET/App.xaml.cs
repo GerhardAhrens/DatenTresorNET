@@ -154,6 +154,7 @@
             {
                 if (settings.IsExitSettings() == false)
                 {
+                    settings.DatabaseFolder = Path.Combine(settings.RootPathname,"Database");
                     settings.LastAccess = DateTime.Now;
                     settings.LastUser = UserInfo.TS().CurrentDomainUser;
                     settings.Save();

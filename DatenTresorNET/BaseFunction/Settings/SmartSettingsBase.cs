@@ -94,6 +94,14 @@ namespace DatenTresorNET.BaseFunction
             }
         }
 
+        public string RootPathname
+        {
+            get
+            {
+                return $"{this.CurrentSettingsRootPath()}\\";
+            }
+        }
+
         public IReadOnlyList<PropertyInfo> GetProperties
         {
             get
@@ -277,6 +285,39 @@ namespace DatenTresorNET.BaseFunction
             {
                 string rootPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
                 settingsPath = $"{rootPath}\\{this.ApplicationName()}\\Settings";
+            }
+
+            if (string.IsNullOrEmpty(settingsPath) == false)
+            {
+                try
+                {
+                    if (Directory.Exists(settingsPath) == false)
+                    {
+                        Directory.CreateDirectory(settingsPath);
+                    }
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+
+            return settingsPath;
+        }
+
+        private string CurrentSettingsRootPath()
+        {
+            string settingsPath = string.Empty;
+
+            if (this.SettingsLocation == SettingsLocation.ProgramData)
+            {
+                string rootPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+                settingsPath = $"{rootPath}\\{this.ApplicationName()}";
+            }
+            else
+            {
+                string rootPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+                settingsPath = $"{rootPath}\\{this.ApplicationName()}";
             }
 
             if (string.IsNullOrEmpty(settingsPath) == false)

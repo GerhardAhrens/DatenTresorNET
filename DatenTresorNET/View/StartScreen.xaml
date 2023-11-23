@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:DatenTresorNET.View"
     xmlns:localConverter="clr-namespace:DatenTresorNET.BaseFunction"
+    xmlns:localStatic="clr-namespace:DatenTresorNET.Core"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="StartScreen"
     Width="800"
@@ -168,12 +169,78 @@
                 </MenuItem>
             </Menu>
 
-            <Button
+            <!--#region Arbeitsbereich-->
+            <GroupBox
+                x:Name="gbSearchWaiting"
                 Grid.Row="2"
-                Grid.Column="0"
-                Width="100"
-                Height="30"
-                Content="Test" />
+                Margin="20"
+                Visibility="{Binding Path=ShowSearchWaiting.Value, UpdateSourceTrigger=PropertyChanged}">
+                <GroupBox.Header>
+                    <Border
+                        Background="#F2F2F2"
+                        BorderBrush="Black"
+                        BorderThickness="1"
+                        CornerRadius="2">
+                        <TextBlock Margin="3" Text="Datenbank suchen und laden ..." />
+                    </Border>
+                </GroupBox.Header>
+
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="22"
+                    FontWeight="Bold"
+                    Text="Suchen nach vorhanden Datenbanken" />
+
+            </GroupBox>
+
+            <GroupBox
+                x:Name="gbNoDatabase"
+                Grid.Row="2"
+                Margin="20"
+                Visibility="{Binding Path=ShowNoDatabase.Value, UpdateSourceTrigger=PropertyChanged}">
+                <GroupBox.Header>
+                    <Border
+                        Background="#F2F2F2"
+                        BorderBrush="Black"
+                        BorderThickness="1"
+                        CornerRadius="2">
+                        <TextBlock Margin="3" Text="Neue Datenbank erstellen" />
+                    </Border>
+                </GroupBox.Header>
+            </GroupBox>
+            <!--#endregion Arbeitsbereich-->
+
+            <!--#region Statuszeile-->
+            <StatusBar
+                Grid.Row="3"
+                Height="Auto"
+                Background="Transparent"
+                FontSize="13">
+                <StatusBarItem x:Name="statusBarItemUserDomainName" DockPanel.Dock="Left">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="{StaticResource ResourceKey=IconStatusbarUser}" />
+                        <Label Content="{x:Static localStatic:StatusbarContent.User}" />
+                    </StackPanel>
+                </StatusBarItem>
+
+                <StatusBarItem DockPanel.Dock="Right">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="{x:Static localStatic:StatusbarContent.CurrentDate}" />
+                        <Label Content="{StaticResource ResourceKey=IconStatusbarCalendar}" />
+                    </StackPanel>
+                </StatusBarItem>
+
+                <Separator Width="1" Background="Black" />
+
+                <StatusBarItem x:Name="sbiDatabase" DockPanel.Dock="Left">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="{StaticResource ResourceKey=IconStatusbarDatabase}" />
+                        <Label Content="{Binding Path=(localStatic:StatusbarContent.DatabaseInfo)}" />
+                    </StackPanel>
+                </StatusBarItem>
+            </StatusBar>
+            <!--#endregion Statuszeile-->
         </Grid>
     </Border>
 </Window>
