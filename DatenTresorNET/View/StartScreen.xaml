@@ -212,6 +212,40 @@
                         <TextBlock Margin="3" Text="Neue Datenbank erstellen" />
                     </Border>
                 </GroupBox.Header>
+                <Grid Margin="10,10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="60" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2">
+                        <Run FontSize="14" Text="Über diesen Dialog kann einen neue leere Datenbank erstellt werden." />
+                        <LineBreak />
+                        <Run FontSize="14" Text="Geben Sie hierzu einen Namen und eine Passwort für die Datenbank an" />
+                    </TextBlock>
+
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        Text="Name der Datenbank" />
+
+                    <TextBlock
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        Text="Passwort" />
+                </Grid>
+
             </GroupBox>
 
             <GroupBox
