@@ -135,5 +135,19 @@
         {
 
         }
+
+        private void BtnDatabaseAdd_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnApplicationExit_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.IsActive == true)
+            {
+                this.DialogResult = false;
+                this.Close();
+            }
+        }
     }
 }

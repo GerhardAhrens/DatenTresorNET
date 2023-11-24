@@ -62,8 +62,74 @@
             </Image.Source>
         </Image>
 
+        <Image
+            x:Key="ButtonImage"
+            Width="24"
+            Height="28"
+            x:Shared="False">
+            <Image.Source>
+                <DrawingImage>
+                    <DrawingImage.Drawing>
+                        <GeometryDrawing Brush="Blue" Geometry="{Binding Path=Tag, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource ResourceKey=StaticResourceConverter}}" />
+                    </DrawingImage.Drawing>
+                </DrawingImage>
+            </Image.Source>
+        </Image>
+
         <Style TargetType="MenuItem">
             <Setter Property="Icon" Value="{StaticResource ResourceKey=MenuItemImage}" />
+        </Style>
+
+        <Style TargetType="Button">
+            <Setter Property="Content" Value="{StaticResource ResourceKey=ButtonImage}" />
+        </Style>
+
+        <Style x:Key="FlatButton" TargetType="Button">
+            <Setter Property="Content" Value="{StaticResource ResourceKey=ButtonImage}" />
+            <Setter Property="Background" Value="{x:Null}" />
+            <Setter Property="BorderBrush" Value="{x:Null}" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="Foreground" Value="Blue" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border
+                            x:Name="border"
+                            Padding="{TemplateBinding Padding}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter
+                                Margin="{TemplateBinding Padding}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                RecognizesAccessKey="True"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsKeyboardFocused" Value="true" />
+                            <Trigger Property="IsDefaulted" Value="true" />
+                            <Trigger Property="IsPressed" Value="true" />
+                            <Trigger Property="ToggleButton.IsChecked" Value="true" />
+
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                            </Trigger>
+
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{x:Null}" />
+                                <Setter Property="BorderBrush" Value="{x:Null}" />
+                                <Setter Property="Foreground" Value="Gray" />
+                                <Setter Property="FontWeight" Value="Bold" />
+                                <Setter TargetName="border" Property="Background" Value="LightGray" />
+                            </Trigger>
+
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="FontWeight" Value="Bold" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </Control.Resources>
 
@@ -244,6 +310,32 @@
                         Grid.Column="0"
                         VerticalAlignment="Center"
                         Text="Passwort" />
+
+                    <StackPanel
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        Orientation="Horizontal">
+                        <Button
+                            x:Name="BtnDatabaseAdd"
+                            Width="50"
+                            HorizontalAlignment="Left"
+                            BorderBrush="Gray"
+                            BorderThickness="1"
+                            Click="BtnDatabaseAdd_Click"
+                            Style="{StaticResource ResourceKey=FlatButton}"
+                            Tag="IconDatabaseAdd" />
+
+                        <Button
+                            x:Name="BtnApplicationExit"
+                            Width="50"
+                            Margin="20,0"
+                            HorizontalAlignment="Left"
+                            BorderBrush="Gray"
+                            BorderThickness="1"
+                            Click="BtnApplicationExit_Click"
+                            Style="{StaticResource ResourceKey=FlatButton}"
+                            Tag="IconExit" />
+                    </StackPanel>
                 </Grid>
 
             </GroupBox>
