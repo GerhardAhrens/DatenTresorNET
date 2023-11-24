@@ -29,7 +29,9 @@ namespace DatenTresorNET.Core
         {
         }
 
-        public List<string> DefaultDatabase { get; set; } = new List<string>() { "None" };
+        public string DefaultDatabase { get; set; } = "None";
+
+        public List<DatabaseParameter> Databases { get; set; }
 
         public string DatabaseFolder { get; set; }
 

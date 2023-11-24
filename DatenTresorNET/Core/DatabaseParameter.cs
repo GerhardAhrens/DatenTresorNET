@@ -31,5 +31,7 @@ namespace DatenTresorNET.Core
         public string DatabaseFolder { get; set; }
 
         public string Description { get; set; }
+
+        public string PasswordHash { get; set; }
     }
 }

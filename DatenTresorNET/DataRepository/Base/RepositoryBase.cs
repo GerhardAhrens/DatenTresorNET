@@ -18,22 +18,39 @@ namespace DatenTresorNET.DataRepository
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Windows;
+    using DatenTresorNET.Core;
 
     using LiteDB;
 
     public abstract class RepositoryBase<TEntity> : IDisposable
     {
         private bool classIsDisposed = false;
+        private string password = null;
 
-        protected RepositoryBase(string databaseFile)
+        protected RepositoryBase(DatabaseParameter database)
         {
-            if (string.IsNullOrEmpty(databaseFile) == false)
-            {
-                this.ConnectionDB = this.Connection(databaseFile);
+            database.IsArgumentNull("database");
 
-                string collectionName = typeof(TEntity).Name;
+            if (string.IsNullOrEmpty(database.PasswordHash) == true)
+            {
+                this.password = string.Empty;
+            }
+            else
+            {
+                this.password = database.PasswordHash;
+            }
+
+            string databaseFile = Path.Combine(database.DatabaseFolder,database.DatabaseName);
+            this.ConnectionDB = this.Connection(databaseFile, this.password);
+
+            string collectionName = typeof(TEntity).Name;
+
+            try
+            {
                 this.DatabaseIntern = new LiteDatabase(this.ConnectionDB);
                 this.DatabaseIntern.UserVersion = 3;
                 if (this.DatabaseIntern != null)
@@ -46,8 +63,25 @@ namespace DatenTresorNET.DataRepository
                     }
                 }
             }
+            catch (IOException ex) when (ex.HResult == -2147024864)
+            {
+                throw new Exception(ex.Message);
+            }
+            catch (LiteException ex) when (ex.Message == "Invalid password")
+            {
+                MessageBox.Show($"Falsches Passwort zum öffnenen der Datenbank.\n{databaseFile}", "Simple Password Manager");
+                Environment.Exit(-1);
+            }
+            catch (LiteException ex) when (ex.Message == "This file is not encrypted")
+            {
+                MessageBox.Show($"Datenbank ist nicht verschlüsselt.\n{databaseFile}", "Simple Password Manager");
+                Environment.Exit(-1);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"{ex.Message}", ex);
+            }
         }
-
 
         public ConnectionString ConnectionDB { get; set; }
 
@@ -137,6 +171,27 @@ namespace DatenTresorNET.DataRepository
             return result;
         }
 
+        public virtual int DeleteAll()
+        {
+            int result = 0;
+            long rebuildResult = 0;
+
+            try
+            {
+                if (this.CollectionIntern != null)
+                {
+                    result = this.CollectionIntern.DeleteAll();
+                    rebuildResult = this.DatabaseIntern.Rebuild();
+                }
+            }
+            catch (Exception ex)
+            {
+                string errorText = ex.Message;
+                throw;
+            }
+
+            return result;
+        }
         public virtual bool Delete(Guid id)
         {
             bool result = false;
@@ -177,7 +232,7 @@ namespace DatenTresorNET.DataRepository
             return result;
         }
 
-        public virtual TEntity ListById(Guid id)
+        public virtual TEntity GetById(Guid id)
         {
             TEntity result = default(TEntity);
 
@@ -300,12 +355,14 @@ namespace DatenTresorNET.DataRepository
 
         private ConnectionString Connection(string databaseFile)
         {
-            ConnectionString conn = null;
-            if (string.IsNullOrEmpty(databaseFile) == false)
-            {
-                conn = new ConnectionString(databaseFile);
-                conn.Connection = ConnectionType.Shared;
-            }
+            return this.Connection(databaseFile, string.Empty);
+        }
+
+        private ConnectionString Connection(string databaseFile, string password)
+        {
+            ConnectionString conn = new ConnectionString(databaseFile);
+            conn.Connection = ConnectionType.Shared;
+            conn.Password = password;
 
             return conn;
         }
