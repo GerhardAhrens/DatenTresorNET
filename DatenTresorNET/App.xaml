@@ -11,7 +11,7 @@
                 <!--  Alle Styles sammeln und mergen  -->
                 <!--  Lokale Styles  -->
                 <ResourceDictionary Source="Resources\XamlIcon\XamlIconViewBox.xaml" />
-
+                <ResourceDictionary Source="Resources\Style\Application.Core.Style.xaml" />
                 <!--  Externe Styles aus Bibliotheken  -->
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

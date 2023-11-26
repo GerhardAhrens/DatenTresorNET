@@ -21,116 +21,12 @@
     WindowStyle="None"
     mc:Ignorable="d">
     <Window.Icon>
-        <DrawingImage Drawing="{Binding Tag.Drawing, RelativeSource={RelativeSource AncestorType=Window}}" />
+        <DrawingImage Drawing="{Binding Path=Tag.Drawing, RelativeSource={RelativeSource AncestorType=Window}}" />
     </Window.Icon>
 
     <Control.Resources>
         <localConverter:StaticResourceConverter x:Key="StaticResourceConverter" />
 
-        <Style x:Key="CustomWindowStyle" TargetType="{x:Type Window}">
-            <Setter Property="WindowChrome.WindowChrome">
-                <Setter.Value>
-                    <WindowChrome
-                        CaptionHeight="40"
-                        CornerRadius="5"
-                        GlassFrameThickness="0"
-                        NonClientFrameEdges="None"
-                        ResizeBorderThickness="5"
-                        UseAeroCaptionButtons="False" />
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="StartScreenBorderStyle" TargetType="{x:Type Border}">
-            <Setter Property="Background" Value="White" />
-            <Setter Property="BorderBrush" Value="Black" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="5" />
-        </Style>
-
-        <Image
-            x:Key="MenuItemImage"
-            Width="16"
-            Height="16"
-            x:Shared="False">
-            <Image.Source>
-                <DrawingImage>
-                    <DrawingImage.Drawing>
-                        <GeometryDrawing Brush="Blue" Geometry="{Binding Path=Tag, RelativeSource={RelativeSource AncestorType=MenuItem}, Converter={StaticResource ResourceKey=StaticResourceConverter}}" />
-                    </DrawingImage.Drawing>
-                </DrawingImage>
-            </Image.Source>
-        </Image>
-
-        <Image
-            x:Key="ButtonImage"
-            Width="24"
-            Height="28"
-            x:Shared="False">
-            <Image.Source>
-                <DrawingImage>
-                    <DrawingImage.Drawing>
-                        <GeometryDrawing Brush="Blue" Geometry="{Binding Path=Tag, RelativeSource={RelativeSource AncestorType=Button}, Converter={StaticResource ResourceKey=StaticResourceConverter}}" />
-                    </DrawingImage.Drawing>
-                </DrawingImage>
-            </Image.Source>
-        </Image>
-
-        <Style TargetType="MenuItem">
-            <Setter Property="Icon" Value="{StaticResource ResourceKey=MenuItemImage}" />
-        </Style>
-
-        <Style TargetType="Button">
-            <Setter Property="Content" Value="{StaticResource ResourceKey=ButtonImage}" />
-        </Style>
-
-        <Style x:Key="FlatButton" TargetType="Button">
-            <Setter Property="Content" Value="{StaticResource ResourceKey=ButtonImage}" />
-            <Setter Property="Background" Value="{x:Null}" />
-            <Setter Property="BorderBrush" Value="{x:Null}" />
-            <Setter Property="FontWeight" Value="Normal" />
-            <Setter Property="Foreground" Value="Blue" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border
-                            x:Name="border"
-                            Padding="{TemplateBinding Padding}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                            <ContentPresenter
-                                Margin="{TemplateBinding Padding}"
-                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                RecognizesAccessKey="True"
-                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsKeyboardFocused" Value="true" />
-                            <Trigger Property="IsDefaulted" Value="true" />
-                            <Trigger Property="IsPressed" Value="true" />
-                            <Trigger Property="ToggleButton.IsChecked" Value="true" />
-
-                            <Trigger Property="IsEnabled" Value="false">
-                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
-                            </Trigger>
-
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="{x:Null}" />
-                                <Setter Property="BorderBrush" Value="{x:Null}" />
-                                <Setter Property="Foreground" Value="Gray" />
-                                <Setter Property="FontWeight" Value="Bold" />
-                                <Setter TargetName="border" Property="Background" Value="LightGray" />
-                            </Trigger>
-
-                            <Trigger Property="IsFocused" Value="True">
-                                <Setter Property="FontWeight" Value="Bold" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
     </Control.Resources>
 
     <Border Style="{DynamicResource ResourceKey=StartScreenBorderStyle}">
@@ -283,6 +179,7 @@
                         <RowDefinition Height="60" />
                         <RowDefinition Height="30" />
                         <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
@@ -305,15 +202,53 @@
                         VerticalAlignment="Center"
                         Text="Name der Datenbank" />
 
+                    <TextBox
+                        x:Name="TxtDatabaseName"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Width="300"
+                        Height="22"
+                        HorizontalAlignment="Left"
+                        FontSize="14"
+                        MaxLength="20" />
+
                     <TextBlock
                         Grid.Row="2"
                         Grid.Column="0"
                         VerticalAlignment="Center"
                         Text="Passwort" />
 
-                    <StackPanel
+                    <PasswordBox
+                        x:Name="TxtNewPassword"
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Width="300"
+                        Height="22"
+                        HorizontalAlignment="Left"
+                        FontSize="14"
+                        MaxLength="20"
+                        PasswordChar="*" />
+
+                    <TextBlock
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        Text="Beschreibung" />
+
+                    <TextBox
+                        x:Name="TxtDescription"
                         Grid.Row="3"
                         Grid.Column="1"
+                        Width="500"
+                        Height="22"
+                        HorizontalAlignment="Left"
+                        FontSize="14"
+                        MaxLength="1000" />
+
+                    <StackPanel
+                        Grid.Row="4"
+                        Grid.Column="1"
+                        Margin="0,20,0,0"
                         Orientation="Horizontal">
                         <Button
                             x:Name="BtnDatabaseAdd"
