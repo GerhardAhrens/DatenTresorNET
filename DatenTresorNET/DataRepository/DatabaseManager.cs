@@ -22,6 +22,7 @@ namespace Solarertrag.DataRepository
     using System.Linq;
     using System.Runtime.Versioning;
 
+    using DatenTresorNET.BaseFunction;
     using DatenTresorNET.BaseFunction.Pattern;
     using DatenTresorNET.Model;
 

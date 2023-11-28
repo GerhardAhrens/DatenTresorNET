@@ -13,9 +13,11 @@
 // </summary>
 //-----------------------------------------------------------------------
 
-namespace DatenTresorNET.BaseFunction.Pattern
+namespace DatenTresorNET.BaseFunction
 {
     using System.Diagnostics;
+
+    using DatenTresorNET.BaseFunction.Pattern;
 
     public class ObjectRuntime : DisposableBase
     {

@@ -198,8 +198,9 @@
                 di.Id = Guid.NewGuid();
                 di.Name = dataBase;
                 di.Description = this.TxtDescription.Text;
-                string collectionName = typeof(DatabaseInformation).Name;
-                ILiteCollection<DatabaseInformation> collection = litedb.GetCollection<DatabaseInformation>(collectionName);
+                di.CreatedBy = UserInfo.TS().CurrentUser;
+                di.CreatedOn = UserInfo.TS().CurrentTime;
+                ILiteCollection<DatabaseInformation> collection = litedb.GetCollection<DatabaseInformation>(typeof(DatabaseInformation).Name);
                 collection.Insert(di);
                 litedb.Commit();
             }

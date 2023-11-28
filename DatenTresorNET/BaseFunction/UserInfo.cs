@@ -1,19 +1,19 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="TableTimeStamp.cs" company="Lifeprojects.de">
-//     Class: TableTimeStamp
-//     Copyright © Lifeprojects.de 2020
+// <copyright file="UserInfo.cs" company="Lifeprojects.de">
+//     Class: UserInfo
+//     Copyright © Lifeprojects.de 2021
 // </copyright>
 //
 // <author>Gerhard Ahrens - Lifeprojects.de</author>
 // <email>developer@lifeprojects.de</email>
-// <date>22.07.2020</date>
+// <date>19.10.2021</date>
 //
 // <summary>
-// the class provides properties for a timestamp on a table
+// Die Klasse Gibt zum aktuellenBenutzer verschiedene Informationen zurück
 // </summary>
 //-----------------------------------------------------------------------
 
-namespace DatenTresorNET.Core
+namespace DatenTresorNET.BaseFunction
 {
     using System;
     using System.Collections.Generic;

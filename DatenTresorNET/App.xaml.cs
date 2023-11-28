@@ -10,6 +10,7 @@
     using System.Windows.Markup;
     using System.Windows.Threading;
 
+    using DatenTresorNET.BaseFunction;
     using DatenTresorNET.Core;
     using DatenTresorNET.View;
 
