@@ -116,7 +116,7 @@
 
                     <MenuItem
                         x:Name="MenuExit"
-                        Click="MenuExit_Click"
+                        Click="BtnApplicationExit_Click"
                         Header="_Beenden"
                         Tag="IconExit" />
                 </MenuItem>
@@ -289,6 +289,105 @@
                         <TextBlock Margin="3" Text="Datenbank auswählen" />
                     </Border>
                 </GroupBox.Header>
+
+                <Grid Margin="10,10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="60" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2">
+                        <Run FontSize="14" Text="Über diesen Dialog kann eine bereits vorhandene Datenbank ausgewählt werden." />
+                        <LineBreak />
+                        <Run FontSize="14" Text="Die zuletzte verwendete Datenbank wird zur direkten Auswahl angezeigt." />
+                    </TextBlock>
+
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        Text="Name der Datenbank" />
+
+                    <ComboBox
+                        x:Name="cmDatabaseNamesSource"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Width="400"
+                        HorizontalAlignment="Left"
+                        VerticalContentAlignment="Center"
+                        DisplayMemberPath="Description"
+                        FontSize="14"
+                        ItemsSource="{Binding Path=DatabaseNamesSource.Value, UpdateSourceTrigger=PropertyChanged}"
+                        SelectedValue="{Binding Path=DatabaseNameSelected.Value, UpdateSourceTrigger=PropertyChanged}"
+                        SelectedValuePath="DatabaseName" />
+
+                    <TextBlock
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        Text="Passwort" />
+
+                    <PasswordBox
+                        x:Name="TxtCurrentPassword"
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Width="300"
+                        Height="22"
+                        HorizontalAlignment="Left"
+                        FontSize="14"
+                        MaxLength="20"
+                        PasswordChar="*" />
+
+                    <StackPanel
+                        Grid.Row="4"
+                        Grid.Column="1"
+                        Margin="0,20,0,0"
+                        Orientation="Horizontal">
+                        <Button
+                            x:Name="BtnDatabaseStart"
+                            Width="50"
+                            HorizontalAlignment="Left"
+                            BorderBrush="Gray"
+                            BorderThickness="1"
+                            Click="BtnDatabaseStart_Click"
+                            Style="{StaticResource ResourceKey=FlatButton}"
+                            Tag="IconDatabaseStart" />
+
+                        <Button
+                            x:Name="BtnDatabaseAddS"
+                            Width="50"
+                            Margin="20,0"
+                            HorizontalAlignment="Left"
+                            BorderBrush="Gray"
+                            BorderThickness="1"
+                            Click="BtnDatabaseAddNew_Click"
+                            Style="{StaticResource ResourceKey=FlatButton}"
+                            Tag="IconDatabaseAdd" />
+
+                        <Button
+                            x:Name="BtnApplicationExitF"
+                            Width="50"
+                            Margin="20,0"
+                            HorizontalAlignment="Left"
+                            BorderBrush="Gray"
+                            BorderThickness="1"
+                            Click="BtnApplicationExit_Click"
+                            Style="{StaticResource ResourceKey=FlatButton}"
+                            Tag="IconExit" />
+                    </StackPanel>
+
+                </Grid>
+
             </GroupBox>
             <!--#endregion Arbeitsbereich-->
 

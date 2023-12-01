@@ -24,7 +24,7 @@
             this.InitializeComponent();
 
             WeakEventManager<Window, RoutedEventArgs>.AddHandler(this, "Loaded", this.OnLoaded);
-            WeakEventManager<MenuItem, RoutedEventArgs>.AddHandler(this.MenuExit, "Click", this.MenuExit_Click);
+            WeakEventManager<MenuItem, RoutedEventArgs>.AddHandler(this.MenuExit, "Click", this.BtnApplicationExit_Click);
 
             this.DataContext = this;
         }
@@ -35,9 +35,12 @@
 
         public XamlProperty<Visibility> ShowSearchWaiting { get; set; } = XamlProperty.Set<Visibility>();
 
+        public XamlProperty<List<DatabaseParameter>> DatabaseNamesSource { get; set; } = XamlProperty.Set<List<DatabaseParameter>>();
+
+        public XamlProperty<string> DatabaseNameSelected { get; set; } = XamlProperty.Set<string>(x => { StatusbarContent.DatabaseInfo = x; });
+
         private string DatabaseLocation { get; set; }
 
-        private List<DatabaseParameter> DatabaseName { get; set; }
 
         public bool IsDatabase { get; set; }
 
@@ -94,9 +97,9 @@
                 this.IsDatabase = dbs.Any();
                 if (this.IsDatabase == true)
                 {
-                    if (this.DatabaseName == null)
+                    if (this.DatabaseNamesSource.Value == null)
                     {
-                        this.DatabaseName = new List<DatabaseParameter>();
+                        this.DatabaseNamesSource.Value = new List<DatabaseParameter>();
                     }
 
                     foreach (string db in dbs)
@@ -113,7 +116,8 @@
                             p.DatabaseFolder = Path.GetDirectoryName(db);
                             p.DatabaseName = Path.GetFileName(db);
                             p.Description = dbinfo.Description;
-                            this.DatabaseName.Add(p);
+                            this.DatabaseNamesSource.Value.Add(p);
+                            this.DatabaseNameSelected.Value = Path.GetFileName(db);
                         }
                         else
                         {
@@ -133,26 +137,7 @@
             return result;
         }
 
-        private void MenuExit_Click(object sender, RoutedEventArgs e)
-        {
-            if (this.IsActive == true)
-            {
-                this.DialogResult = false;
-                this.Close();
-            }
-        }
-
-        private void OnApplicationStart(object sender, RoutedEventArgs e)
-        {
-            this.DialogResult = true;
-        }
-
-        private void MenuSettings_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void BtnDatabaseAdd_Click(object sender, RoutedEventArgs e)
+        private async void BtnDatabaseAdd_Click(object sender, RoutedEventArgs e)
         {
             string dataBase = this.TxtDatabaseName.Text;
             string password = this.TxtNewPassword.Password;
@@ -203,6 +188,41 @@
                 ILiteCollection<DatabaseInformation> collection = litedb.GetCollection<DatabaseInformation>(typeof(DatabaseInformation).Name);
                 collection.Insert(di);
                 litedb.Commit();
+
+                if (string.IsNullOrEmpty(this.DatabaseLocation) == false)
+                {
+                    if (await this.AsyncSearchDatabase() == false)
+                    {
+                        this.ShowSearchWaiting.Value = Visibility.Collapsed;
+                        this.ShowDatabase.Value = Visibility.Collapsed;
+                        this.ShowNoDatabase.Value = Visibility.Visible;
+                    }
+                    else
+                    {
+                        this.ShowSearchWaiting.Value = Visibility.Collapsed;
+                        this.ShowDatabase.Value = Visibility.Visible;
+                        this.ShowNoDatabase.Value = Visibility.Collapsed;
+                    }
+                }
+            }
+        }
+
+        private void BtnDatabaseAddNew_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(this.DatabaseLocation) == false)
+            {
+                this.ShowSearchWaiting.Value = Visibility.Collapsed;
+                this.ShowDatabase.Value = Visibility.Collapsed;
+                this.ShowNoDatabase.Value = Visibility.Visible;
+            }
+        }
+
+        private void BtnDatabaseStart_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.IsActive == true)
+            {
+                this.DialogResult = true;
+                this.Close();
             }
         }
 
@@ -213,6 +233,10 @@
                 this.DialogResult = false;
                 this.Close();
             }
+        }
+
+        private void MenuSettings_Click(object sender, RoutedEventArgs e)
+        {
         }
 
         private ConnectionString Connection(string databaseFile, string password)
