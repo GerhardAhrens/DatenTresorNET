@@ -1,6 +1,7 @@
 ﻿namespace DatenTresorNET.View
 {
     using System;
+    using System.Linq;
     using System.Collections;
     using System.Collections.Generic;
     using System.IO;
@@ -37,7 +38,7 @@
 
         public XamlProperty<List<DatabaseParameter>> DatabaseNamesSource { get; set; } = XamlProperty.Set<List<DatabaseParameter>>();
 
-        public XamlProperty<string> DatabaseNameSelected { get; set; } = XamlProperty.Set<string>(x => { StatusbarContent.DatabaseInfo = x; });
+        public XamlProperty<DatabaseParameter> DatabaseNameSelected { get; set; } = XamlProperty.Set<DatabaseParameter>(x => { StatusbarContent.DatabaseInfo = x.DatabaseName; });
 
         private string DatabaseLocation { get; set; }
 
@@ -117,13 +118,13 @@
                             p.DatabaseName = Path.GetFileName(db);
                             p.Description = dbinfo.Description;
                             this.DatabaseNamesSource.Value.Add(p);
-                            this.DatabaseNameSelected.Value = Path.GetFileName(db);
                         }
                         else
                         {
                         }
                     }
 
+                    this.DatabaseNameSelected.Value = this.DatabaseNamesSource.Value.FirstOrDefault(f => f.Default == true);
                     result = true;
                 }
                 else
@@ -215,6 +216,13 @@
                 this.ShowDatabase.Value = Visibility.Collapsed;
                 this.ShowNoDatabase.Value = Visibility.Visible;
             }
+        }
+
+        private void BtnBack_Click(object sender, RoutedEventArgs e)
+        {
+            this.ShowSearchWaiting.Value = Visibility.Collapsed;
+            this.ShowDatabase.Value = Visibility.Visible;
+            this.ShowNoDatabase.Value = Visibility.Collapsed;
         }
 
         private void BtnDatabaseStart_Click(object sender, RoutedEventArgs e)

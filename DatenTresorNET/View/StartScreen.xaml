@@ -261,6 +261,17 @@
                             Tag="IconDatabaseAdd" />
 
                         <Button
+                            x:Name="BtnBack"
+                            Width="50"
+                            Margin="20,0"
+                            HorizontalAlignment="Left"
+                            BorderBrush="Gray"
+                            BorderThickness="1"
+                            Click="BtnBack_Click"
+                            Style="{StaticResource ResourceKey=FlatButton}"
+                            Tag="IconBack" />
+
+                        <Button
                             x:Name="BtnApplicationExit"
                             Width="50"
                             Margin="20,0"
@@ -328,8 +339,7 @@
                         DisplayMemberPath="Description"
                         FontSize="14"
                         ItemsSource="{Binding Path=DatabaseNamesSource.Value, UpdateSourceTrigger=PropertyChanged}"
-                        SelectedValue="{Binding Path=DatabaseNameSelected.Value, UpdateSourceTrigger=PropertyChanged}"
-                        SelectedValuePath="DatabaseName" />
+                        SelectedItem="{Binding Path=DatabaseNameSelected.Value, UpdateSourceTrigger=PropertyChanged}" />
 
                     <TextBlock
                         Grid.Row="2"
