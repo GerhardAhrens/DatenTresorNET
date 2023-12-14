@@ -67,12 +67,14 @@
                     this.ShowSearchWaiting.Value = Visibility.Collapsed;
                     this.ShowDatabase.Value = Visibility.Collapsed;
                     this.ShowNoDatabase.Value = Visibility.Visible;
+                    this.BtnBack.Visibility = Visibility.Collapsed;
                 }
                 else
                 {
                     this.ShowSearchWaiting.Value = Visibility.Collapsed;
                     this.ShowDatabase.Value = Visibility.Visible;
                     this.ShowNoDatabase.Value = Visibility.Collapsed;
+                    this.BtnBack.Visibility = Visibility.Visible;
                 }
             }
         }
@@ -118,9 +120,6 @@
                             p.DatabaseName = Path.GetFileName(db);
                             p.Description = dbinfo.Description;
                             this.DatabaseNamesSource.Value.Add(p);
-                        }
-                        else
-                        {
                         }
                     }
 
@@ -197,12 +196,14 @@
                         this.ShowSearchWaiting.Value = Visibility.Collapsed;
                         this.ShowDatabase.Value = Visibility.Collapsed;
                         this.ShowNoDatabase.Value = Visibility.Visible;
+                        this.BtnBack.Visibility = Visibility.Collapsed;
                     }
                     else
                     {
                         this.ShowSearchWaiting.Value = Visibility.Collapsed;
                         this.ShowDatabase.Value = Visibility.Visible;
                         this.ShowNoDatabase.Value = Visibility.Collapsed;
+                        this.BtnBack.Visibility = Visibility.Visible;
                     }
                 }
             }
