@@ -38,12 +38,13 @@
 
         public XamlProperty<List<DatabaseParameter>> DatabaseNamesSource { get; set; } = XamlProperty.Set<List<DatabaseParameter>>();
 
-        public XamlProperty<DatabaseParameter> DatabaseNameSelected { get; set; } = XamlProperty.Set<DatabaseParameter>(x => { StatusbarContent.DatabaseInfo = x.DatabaseName; });
-
-        private string DatabaseLocation { get; set; }
-
+        public XamlProperty<DatabaseParameter> DatabaseNameSelected { get; set; } = XamlProperty.Set<DatabaseParameter>(x => { StatusbarContent.DatabaseInfo = x.DatabaseName;});
 
         public bool IsDatabase { get; set; }
+
+        public string CurrentPassword { get; set; }
+
+        private string DatabaseLocation { get; set; }
 
         private async void OnLoaded(object sender, RoutedEventArgs e)
         {
@@ -57,6 +58,11 @@
                 {
                     settings.Load();
                     this.DatabaseLocation = settings.DatabaseFolder;
+                    DatabaseParameter dp = settings.Databases.First(f => f.Default == true);
+                    if (dp != null)
+                    {
+                        this.DatabaseNameSelected.Value = dp;
+                    }
                 }
             }
 
@@ -68,6 +74,7 @@
                     this.ShowDatabase.Value = Visibility.Collapsed;
                     this.ShowNoDatabase.Value = Visibility.Visible;
                     this.BtnBack.Visibility = Visibility.Collapsed;
+                    this.BtnDatabaseDelete.Visibility = Visibility.Collapsed;
                 }
                 else
                 {
@@ -75,7 +82,11 @@
                     this.ShowDatabase.Value = Visibility.Visible;
                     this.ShowNoDatabase.Value = Visibility.Collapsed;
                     this.BtnBack.Visibility = Visibility.Visible;
+                    this.BtnDatabaseDelete.Visibility = Visibility.Visible;
                 }
+
+                this.BtnDatabaseDelete.IsEnabled = false;
+                this.BtnDatabaseStart.IsEnabled = false;
             }
         }
 
@@ -143,6 +154,8 @@
             string password = this.TxtNewPassword.Password;
             string fullName = Path.Combine(this.DatabaseLocation, $"{dataBase}.db");
 
+            this.BtnDatabaseAdd.IsEnabled = false;
+
             using (ApplicationSettings settings = new ApplicationSettings())
             {
                 if (settings.IsExitSettings() == true)
@@ -197,6 +210,7 @@
                         this.ShowDatabase.Value = Visibility.Collapsed;
                         this.ShowNoDatabase.Value = Visibility.Visible;
                         this.BtnBack.Visibility = Visibility.Collapsed;
+                        this.BtnDatabaseDelete.Visibility = Visibility.Collapsed;
                     }
                     else
                     {
@@ -204,7 +218,11 @@
                         this.ShowDatabase.Value = Visibility.Visible;
                         this.ShowNoDatabase.Value = Visibility.Collapsed;
                         this.BtnBack.Visibility = Visibility.Visible;
+                        this.BtnDatabaseDelete.Visibility = Visibility.Visible;
                     }
+
+                    this.BtnDatabaseDelete.IsEnabled = false;
+                    this.BtnDatabaseStart.IsEnabled = false;
                 }
             }
         }
@@ -216,6 +234,8 @@
                 this.ShowSearchWaiting.Value = Visibility.Collapsed;
                 this.ShowDatabase.Value = Visibility.Collapsed;
                 this.ShowNoDatabase.Value = Visibility.Visible;
+                this.BtnDatabaseDelete.Visibility = Visibility.Collapsed;
+                this.BtnDatabaseAdd.IsEnabled = false;
             }
         }
 
@@ -224,6 +244,7 @@
             this.ShowSearchWaiting.Value = Visibility.Collapsed;
             this.ShowDatabase.Value = Visibility.Visible;
             this.ShowNoDatabase.Value = Visibility.Collapsed;
+            this.BtnDatabaseDelete.Visibility = Visibility.Visible;
         }
 
         private void BtnDatabaseStart_Click(object sender, RoutedEventArgs e)
@@ -232,6 +253,29 @@
             {
                 this.DialogResult = true;
                 this.Close();
+
+                using (ApplicationSettings settings = new ApplicationSettings())
+                {
+                    if (settings.IsExitSettings() == true)
+                    {
+                        settings.Load();
+                    }
+
+                    if (settings.Databases?.Any() == true)
+                    {
+                        foreach (DatabaseParameter dbParam in settings.Databases)
+                        {
+                            dbParam.Default = false;
+                        }
+
+                        string selectedName = DatabaseNameSelected.Value.DatabaseName;
+                        DatabaseParameter dp = settings.Databases.First(f => f.DatabaseName.ToLower() == Path.GetFileNameWithoutExtension(selectedName).ToLower());
+                        dp.Default = true;
+
+                        settings.Save();
+                    }
+                }
+
             }
         }
 
@@ -255,6 +299,29 @@
             conn.Password = password;
 
             return conn;
+        }
+
+        private void BtnDatabaseDelete_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void TxtCurrentPassword_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (this.DataContext != null && sender is PasswordBox passwordBox)
+            {
+                ((dynamic)this.DataContext).CurrentPassword = passwordBox.Password;
+                if (passwordBox.Password.Length > 0)
+                {
+                    this.BtnDatabaseDelete.IsEnabled = true;
+                    this.BtnDatabaseStart.IsEnabled = true;
+                }
+                else
+                {
+                    this.BtnDatabaseDelete.IsEnabled = false;
+                    this.BtnDatabaseStart.IsEnabled = false;
+                }
+            }
         }
     }
 }
