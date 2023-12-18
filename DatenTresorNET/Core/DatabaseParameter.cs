@@ -18,11 +18,14 @@ namespace DatenTresorNET.Core
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
 
-    public class DatabaseParameter
+    [DebuggerDisplay("DatabaseName:{this.DatabaseName}; Default: {this.Default}")]
+    public class DatabaseParameter : IEqualityComparer<DatabaseParameter>
     {
         public bool Default { get; set; }
 
@@ -33,5 +36,15 @@ namespace DatenTresorNET.Core
         public string Description { get; set; }
 
         public string PasswordHash { get; set; }
+
+        public bool Equals(DatabaseParameter x, DatabaseParameter y)
+        {
+            return x.DatabaseName == y.DatabaseName;
+        }
+
+        public int GetHashCode([DisallowNull] DatabaseParameter obj)
+        {
+            return obj.DatabaseName.GetHashCode();
+        }
     }
 }

@@ -27,7 +27,6 @@
 
     <Control.Resources>
         <localConverter:StaticResourceConverter x:Key="StaticResourceConverter" />
-
     </Control.Resources>
 
     <Border Style="{DynamicResource ResourceKey=StartScreenBorderStyle}">
@@ -141,6 +140,7 @@
                 x:Name="gbSearchWaiting"
                 Grid.Row="2"
                 Margin="20"
+                Panel.ZIndex="2"
                 Visibility="{Binding Path=ShowSearchWaiting.Value, UpdateSourceTrigger=PropertyChanged}">
                 <GroupBox.Header>
                     <Border
@@ -165,6 +165,7 @@
                 x:Name="gbNoDatabase"
                 Grid.Row="2"
                 Margin="20"
+                Panel.ZIndex="1"
                 Visibility="{Binding Path=ShowNoDatabase.Value, UpdateSourceTrigger=PropertyChanged}">
                 <GroupBox.Header>
                     <Border
@@ -291,6 +292,7 @@
                 x:Name="gbFoundDatabase"
                 Grid.Row="2"
                 Margin="20"
+                Panel.ZIndex="0"
                 Visibility="{Binding Path=ShowDatabase.Value, UpdateSourceTrigger=PropertyChanged}">
                 <GroupBox.Header>
                     <Border
@@ -334,13 +336,25 @@
                         x:Name="cmDatabaseNamesSource"
                         Grid.Row="1"
                         Grid.Column="1"
+                        Grid.ColumnSpan="2"
                         Width="400"
                         HorizontalAlignment="Left"
                         VerticalContentAlignment="Center"
-                        DisplayMemberPath="Description"
                         FontSize="14"
                         ItemsSource="{Binding Path=DatabaseNamesSource.Value, UpdateSourceTrigger=PropertyChanged}"
-                        SelectedItem="{Binding Path=DatabaseNameSelected.Value, UpdateSourceTrigger=PropertyChanged}" />
+                        SelectedIndex="0"
+                        SelectedItem="{Binding Path=DatabaseNameSelected.Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock FontWeight="Medium" Text="{Binding Path=Description}">
+                                    <Run Text="  " />
+                                    <Run Text="(" />
+                                    <Run Text="{Binding Path=DatabaseName}" />
+                                    <Run Text=")" />
+                                </TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
 
                     <TextBlock
                         Grid.Row="2"

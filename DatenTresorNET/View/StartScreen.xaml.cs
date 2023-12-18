@@ -58,17 +58,12 @@
                 {
                     settings.Load();
                     this.DatabaseLocation = settings.DatabaseFolder;
-                    DatabaseParameter dp = settings.Databases.First(f => f.Default == true);
-                    if (dp != null)
-                    {
-                        this.DatabaseNameSelected.Value = dp;
-                    }
                 }
             }
 
             if (string.IsNullOrEmpty(this.DatabaseLocation) == false)
             {
-                if (await this.AsyncSearchDatabase() == false)
+                if (await this.SearchDatabaseAsync() == false)
                 {
                     this.ShowSearchWaiting.Value = Visibility.Collapsed;
                     this.ShowDatabase.Value = Visibility.Collapsed;
@@ -90,7 +85,7 @@
             }
         }
 
-        public async Task<bool> AsyncSearchDatabase()
+        public async Task<bool> SearchDatabaseAsync()
         {
             return await Task.Run(() =>
             {
@@ -121,20 +116,67 @@
                         ConnectionString dbconn = this.Connection(db, string.Empty);
                         LiteDatabase litedb = new LiteDatabase(dbconn);
                         ILiteCollection<DatabaseInformation> databaseInformationCollection = litedb.GetCollection<DatabaseInformation>(typeof(DatabaseInformation).Name);
-                        if (databaseInformationCollection.Count() == 1)
-                        {
-                            DatabaseInformation dbinfo = databaseInformationCollection.FindAll().First();
+                        DatabaseInformation dbinfo = databaseInformationCollection.FindAll().First();
 
-                            DatabaseParameter p = new DatabaseParameter();
-                            p.Default = true;
-                            p.DatabaseFolder = Path.GetDirectoryName(db);
-                            p.DatabaseName = Path.GetFileName(db);
-                            p.Description = dbinfo.Description;
-                            this.DatabaseNamesSource.Value.Add(p);
+                        DatabaseParameter dbparam = new DatabaseParameter();
+                        if (dbs.Count() == 1)
+                        {
+                            dbparam.Default = true;
+                        }
+                        else
+                        {
+                            dbparam.Default = false;
+                        }
+
+                        dbparam.DatabaseFolder = Path.GetDirectoryName(db);
+                        dbparam.DatabaseName = Path.GetFileName(db);
+                        dbparam.Description = dbinfo.Description;
+                        this.DatabaseNamesSource.Value.Add(dbparam);
+                        litedb.Dispose();
+                        litedb = null;
+                    }
+
+                    using (ApplicationSettings settings = new ApplicationSettings())
+                    {
+                        if (settings.IsExitSettings() == true)
+                        {
+                            settings.Load();
+                        }
+
+                        if (settings.Databases.Count() != dbs.Count())
+                        {
+                            settings.Databases.Clear();
+                            if (this.DatabaseNamesSource.Value != null)
+                            {
+                                foreach (DatabaseParameter item in this.DatabaseNamesSource.Value)
+                                {
+                                    DatabaseParameter dp = new DatabaseParameter();
+                                    dp.DatabaseName = item.DatabaseName;
+                                    dp.DatabaseFolder = this.DatabaseLocation;
+                                    dp.Description = item.Description;
+                                    dp.PasswordHash = item.PasswordHash;
+                                    settings.Databases.Add(dp);
+                                }
+
+                                settings.Save();
+                            }
+
+                        }
+                        else
+                        {
+                            foreach (DatabaseParameter item in this.DatabaseNamesSource.Value)
+                            {
+                                if (item.DatabaseName == settings.Databases.FirstOrDefault(f => f.Default == true).DatabaseName)
+                                {
+                                    item.Default = true;
+                                }
+                            }
+
+                            this.DatabaseNamesSource.Value = this.DatabaseNamesSource.Value.OrderBy(x => x.Default).ToList();
+                            this.DatabaseNameSelected.Value = this.DatabaseNamesSource.Value.FirstOrDefault(f => f.Default == true);
                         }
                     }
 
-                    this.DatabaseNameSelected.Value = this.DatabaseNamesSource.Value.FirstOrDefault(f => f.Default == true);
                     result = true;
                 }
                 else
@@ -156,37 +198,6 @@
 
             this.BtnDatabaseAdd.IsEnabled = false;
 
-            using (ApplicationSettings settings = new ApplicationSettings())
-            {
-                if (settings.IsExitSettings() == true)
-                {
-                    settings.Load();
-                }
-
-                if (settings.Databases?.Any() == true)
-                {
-                    foreach (DatabaseParameter dbParam in settings.Databases)
-                    {
-                        dbParam.Default = false;
-                    }
-                }
-
-                DatabaseParameter dp = new DatabaseParameter();
-                dp.Default = true;
-                dp.DatabaseName = dataBase;
-                dp.DatabaseFolder = this.DatabaseLocation;
-                dp.Description = this.TxtDescription.Text;
-                dp.PasswordHash = password;
-                if (settings.Databases == null)
-                {
-                    settings.Databases = new List<DatabaseParameter>();
-                }
-
-                settings.Databases.Add( dp );
-
-                settings.Save();
-            }
-
             ConnectionString dbconn = this.Connection(fullName, string.Empty);
             LiteDatabase litedb = new LiteDatabase(dbconn);
             litedb.UserVersion = 3;
@@ -195,6 +206,7 @@
                 DatabaseInformation di = new DatabaseInformation();
                 di.Id = Guid.NewGuid();
                 di.Name = dataBase;
+                di.Password = password;
                 di.Description = this.TxtDescription.Text;
                 di.CreatedBy = UserInfo.TS().CurrentUser;
                 di.CreatedOn = UserInfo.TS().CurrentTime;
@@ -204,7 +216,7 @@
 
                 if (string.IsNullOrEmpty(this.DatabaseLocation) == false)
                 {
-                    if (await this.AsyncSearchDatabase() == false)
+                    if (await this.SearchDatabaseAsync() == false)
                     {
                         this.ShowSearchWaiting.Value = Visibility.Collapsed;
                         this.ShowDatabase.Value = Visibility.Collapsed;
@@ -269,7 +281,7 @@
                         }
 
                         string selectedName = DatabaseNameSelected.Value.DatabaseName;
-                        DatabaseParameter dp = settings.Databases.First(f => f.DatabaseName.ToLower() == Path.GetFileNameWithoutExtension(selectedName).ToLower());
+                        DatabaseParameter dp = settings.Databases.First(f => f.DatabaseName.ToLower() == selectedName.ToLower());
                         dp.Default = true;
 
                         settings.Save();
