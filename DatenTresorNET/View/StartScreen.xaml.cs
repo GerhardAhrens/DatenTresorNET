@@ -113,7 +113,7 @@
 
                     foreach (string db in dbs)
                     {
-                        ConnectionString dbconn = this.Connection(db, string.Empty);
+                        ConnectionString dbconn = this.Connection(db, null);
                         LiteDatabase litedb = new LiteDatabase(dbconn);
                         ILiteCollection<DatabaseInformation> databaseInformationCollection = litedb.GetCollection<DatabaseInformation>(typeof(DatabaseInformation).Name);
                         DatabaseInformation dbinfo = databaseInformationCollection.FindAll().First();
@@ -166,9 +166,17 @@
                         {
                             foreach (DatabaseParameter item in this.DatabaseNamesSource.Value)
                             {
-                                if (item.DatabaseName == settings.Databases.FirstOrDefault(f => f.Default == true).DatabaseName)
+                                if (settings.Databases.Count() == 1)
                                 {
                                     item.Default = true;
+                                    break;
+                                }
+                                else
+                                {
+                                    if (item.DatabaseName == settings.Databases.FirstOrDefault(f => f.Default == true).DatabaseName)
+                                    {
+                                        item.Default = true;
+                                    }
                                 }
                             }
 
@@ -308,7 +316,10 @@
         {
             ConnectionString conn = new ConnectionString(databaseFile);
             conn.Connection = ConnectionType.Shared;
-            conn.Password = password;
+            if (string.IsNullOrEmpty(password) == false)
+            {
+                conn.Password = password;
+            }
 
             return conn;
         }
