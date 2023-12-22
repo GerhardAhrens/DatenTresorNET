@@ -1,10 +1,9 @@
 ﻿namespace DatenTresorNET.View
 {
     using System;
-    using System.Linq;
-    using System.Collections;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Threading;
@@ -70,6 +69,9 @@
                     this.ShowNoDatabase.Value = Visibility.Visible;
                     this.BtnBack.Visibility = Visibility.Collapsed;
                     this.BtnDatabaseDelete.Visibility = Visibility.Collapsed;
+
+                    this.BtnDatabaseDelete.IsEnabled = false;
+                    this.BtnDatabaseStart.IsEnabled = false;
                 }
                 else
                 {
@@ -78,10 +80,10 @@
                     this.ShowNoDatabase.Value = Visibility.Collapsed;
                     this.BtnBack.Visibility = Visibility.Visible;
                     this.BtnDatabaseDelete.Visibility = Visibility.Visible;
-                }
 
-                this.BtnDatabaseDelete.IsEnabled = false;
-                this.BtnDatabaseStart.IsEnabled = false;
+                    this.BtnDatabaseDelete.IsEnabled = true;
+                    this.BtnDatabaseStart.IsEnabled = true;
+                }
             }
         }
 
@@ -128,8 +130,8 @@
                             dbparam.Default = false;
                         }
 
-                        dbparam.DatabaseFolder = Path.GetDirectoryName(db);
-                        dbparam.DatabaseName = Path.GetFileName(db);
+                        dbparam.DatabaseFolder = System.IO.Path.GetDirectoryName(db);
+                        dbparam.DatabaseName = System.IO.Path.GetFileName(db);
                         dbparam.Description = dbinfo.Description;
                         this.DatabaseNamesSource.Value.Add(dbparam);
                         litedb.Dispose();
@@ -202,7 +204,7 @@
         {
             string dataBase = this.TxtDatabaseName.Text;
             string password = this.TxtNewPassword.Password;
-            string fullName = Path.Combine(this.DatabaseLocation, $"{dataBase}.db");
+            string fullName = System.IO.Path.Combine(this.DatabaseLocation, $"{dataBase}.db");
 
             this.BtnDatabaseAdd.IsEnabled = false;
 
@@ -231,6 +233,9 @@
                         this.ShowNoDatabase.Value = Visibility.Visible;
                         this.BtnBack.Visibility = Visibility.Collapsed;
                         this.BtnDatabaseDelete.Visibility = Visibility.Collapsed;
+
+                        this.BtnDatabaseDelete.IsEnabled = false;
+                        this.BtnDatabaseStart.IsEnabled = false;
                     }
                     else
                     {
@@ -239,10 +244,10 @@
                         this.ShowNoDatabase.Value = Visibility.Collapsed;
                         this.BtnBack.Visibility = Visibility.Visible;
                         this.BtnDatabaseDelete.Visibility = Visibility.Visible;
-                    }
 
-                    this.BtnDatabaseDelete.IsEnabled = false;
-                    this.BtnDatabaseStart.IsEnabled = false;
+                        this.BtnDatabaseDelete.IsEnabled = true;
+                        this.BtnDatabaseStart.IsEnabled = true;
+                    }
                 }
             }
         }
@@ -291,7 +296,6 @@
                         string selectedName = DatabaseNameSelected.Value.DatabaseName;
                         DatabaseParameter dp = settings.Databases.First(f => f.DatabaseName.ToLower() == selectedName.ToLower());
                         dp.Default = true;
-
                         settings.Save();
                     }
                 }
@@ -324,9 +328,39 @@
             return conn;
         }
 
-        private void BtnDatabaseDelete_Click(object sender, RoutedEventArgs e)
+        private async void BtnDatabaseDelete_Click(object sender, RoutedEventArgs e)
         {
+            var selectEntry = this.cbDatabaseNamesSource.SelectedValue;
+            string dbroot = ((DatabaseParameter)selectEntry).DatabaseFolder;
+            string dbname = ((DatabaseParameter)selectEntry).DatabaseName;
+            string fullname = System.IO.Path.Combine(dbroot, dbname);
+            if (File.Exists(fullname) == true)
+            {
+                File.Delete(fullname);
 
+                if (await this.SearchDatabaseAsync() == false)
+                {
+                    this.ShowSearchWaiting.Value = Visibility.Collapsed;
+                    this.ShowDatabase.Value = Visibility.Collapsed;
+                    this.ShowNoDatabase.Value = Visibility.Visible;
+                    this.BtnBack.Visibility = Visibility.Collapsed;
+                    this.BtnDatabaseDelete.Visibility = Visibility.Collapsed;
+
+                    this.BtnDatabaseDelete.IsEnabled = false;
+                    this.BtnDatabaseStart.IsEnabled = false;
+                }
+                else
+                {
+                    this.ShowSearchWaiting.Value = Visibility.Collapsed;
+                    this.ShowDatabase.Value = Visibility.Visible;
+                    this.ShowNoDatabase.Value = Visibility.Collapsed;
+                    this.BtnBack.Visibility = Visibility.Visible;
+                    this.BtnDatabaseDelete.Visibility = Visibility.Visible;
+
+                    this.BtnDatabaseDelete.IsEnabled = true;
+                    this.BtnDatabaseStart.IsEnabled = true;
+                }
+            }
         }
 
         private void TxtCurrentPassword_PasswordChanged(object sender, RoutedEventArgs e)
@@ -336,15 +370,13 @@
                 ((dynamic)this.DataContext).CurrentPassword = passwordBox.Password;
                 if (passwordBox.Password.Length > 0)
                 {
-                    this.BtnDatabaseDelete.IsEnabled = true;
-                    this.BtnDatabaseStart.IsEnabled = true;
-                }
-                else
-                {
-                    this.BtnDatabaseDelete.IsEnabled = false;
-                    this.BtnDatabaseStart.IsEnabled = false;
                 }
             }
+        }
+
+        private void BtnCreatePassword_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

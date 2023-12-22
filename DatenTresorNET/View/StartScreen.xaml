@@ -260,7 +260,8 @@
                             BorderThickness="1"
                             Click="BtnDatabaseAdd_Click"
                             Style="{StaticResource ResourceKey=FlatButton}"
-                            Tag="IconDatabaseAdd" />
+                            Tag="IconDatabaseAdd"
+                            ToolTip="Neue Datenbank erstellen" />
 
                         <Button
                             x:Name="BtnBack"
@@ -271,7 +272,20 @@
                             BorderThickness="1"
                             Click="BtnBack_Click"
                             Style="{StaticResource ResourceKey=FlatButton}"
-                            Tag="IconBack" />
+                            Tag="IconBack"
+                            ToolTip="Zurück" />
+
+                        <Button
+                            x:Name="BtnCreatePassword"
+                            Width="50"
+                            Margin="20,0"
+                            HorizontalAlignment="Left"
+                            BorderBrush="Gray"
+                            BorderThickness="1"
+                            Click="BtnCreatePassword_Click"
+                            Style="{StaticResource ResourceKey=FlatButtonGreen}"
+                            Tag="IconCreatePassword"
+                            ToolTip="Passwortgenerator aufrufen" />
 
                         <Button
                             x:Name="BtnApplicationExit"
@@ -282,7 +296,8 @@
                             BorderThickness="1"
                             Click="BtnApplicationExit_Click"
                             Style="{StaticResource ResourceKey=FlatButton}"
-                            Tag="IconExit" />
+                            Tag="IconExit"
+                            ToolTip="Beenden" />
                     </StackPanel>
                 </Grid>
 
@@ -333,7 +348,7 @@
                         Text="Name der Datenbank" />
 
                     <ComboBox
-                        x:Name="cmDatabaseNamesSource"
+                        x:Name="cbDatabaseNamesSource"
                         Grid.Row="1"
                         Grid.Column="1"
                         Grid.ColumnSpan="2"
