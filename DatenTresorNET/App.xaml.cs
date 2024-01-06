@@ -1,18 +1,17 @@
 ﻿namespace DatenTresorNET
 {
+    using DatenTresorNET.BaseFunction;
+    using DatenTresorNET.Core;
+    using DatenTresorNET.View;
+
     using System.Collections;
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
-    using System.Security.Cryptography.Xml;
     using System.Text;
     using System.Windows;
     using System.Windows.Markup;
     using System.Windows.Threading;
-
-    using DatenTresorNET.BaseFunction;
-    using DatenTresorNET.Core;
-    using DatenTresorNET.View;
 
     /// <summary>
     /// Interaction logic for App.xaml
