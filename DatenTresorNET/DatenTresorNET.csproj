@@ -19,7 +19,6 @@
     <Folder Include="BaseFunction\Pattern\Disposable\" />
     <Folder Include="BaseFunction\Settings\" />
     <Folder Include="Core\Grafik\" />
-    <Folder Include="Core\Settings\" />
     <Folder Include="DataRepository\Base\" />
     <Folder Include="Extension\" />
     <Folder Include="Resources\XamlIcon\" />
