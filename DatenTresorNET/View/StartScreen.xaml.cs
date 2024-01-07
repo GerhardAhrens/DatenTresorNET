@@ -1,11 +1,5 @@
 ﻿namespace DatenTresorNET.View
 {
-    using DatenTresorNET.BaseFunction;
-    using DatenTresorNET.Core;
-    using DatenTresorNET.Model;
-
-    using LiteDB;
-
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -13,6 +7,12 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Threading;
+
+    using DatenTresorNET.BaseFunction;
+    using DatenTresorNET.Core;
+    using DatenTresorNET.Model;
+
+    using LiteDB;
 
     /// <summary>
     /// Interaktionslogik für StartScreen.xaml
