@@ -33,6 +33,7 @@ namespace DatenTresorNET.Core
         SearchDatabase = 2,
         SelectDatabase = 3,
         DeleteDatabase = 4,
+        Waiting = 5,
         QuestionDlg = 10,
     }
 }

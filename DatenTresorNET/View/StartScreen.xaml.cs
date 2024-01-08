@@ -47,9 +47,7 @@
 
         private async void OnLoaded(object sender, RoutedEventArgs e)
         {
-            this.ShowNoDatabase.Value = Visibility.Collapsed;
-            this.ShowDatabase.Value = Visibility.Collapsed;
-            this.ShowSearchWaiting.Value = Visibility.Visible;
+            this.SetCurrentDialog(SelectDialog.Waiting);
 
             using (ApplicationSettings settings = new ApplicationSettings())
             {
@@ -64,25 +62,11 @@
             {
                 if (await this.SearchDatabaseAsync() == false)
                 {
-                    this.ShowSearchWaiting.Value = Visibility.Collapsed;
-                    this.ShowDatabase.Value = Visibility.Collapsed;
-                    this.ShowNoDatabase.Value = Visibility.Visible;
-                    this.BtnBack.Visibility = Visibility.Collapsed;
-                    this.BtnDatabaseDelete.Visibility = Visibility.Collapsed;
-
-                    this.BtnDatabaseDelete.IsEnabled = false;
-                    this.BtnDatabaseStart.IsEnabled = false;
+                    this.SetCurrentDialog(SelectDialog.AddNewDatabase);
                 }
                 else
                 {
-                    this.ShowSearchWaiting.Value = Visibility.Collapsed;
-                    this.ShowDatabase.Value = Visibility.Visible;
-                    this.ShowNoDatabase.Value = Visibility.Collapsed;
-                    this.BtnBack.Visibility = Visibility.Visible;
-                    this.BtnDatabaseDelete.Visibility = Visibility.Visible;
-
-                    this.BtnDatabaseDelete.IsEnabled = true;
-                    this.BtnDatabaseStart.IsEnabled = true;
+                    this.SetCurrentDialog(SelectDialog.SelectDatabase);
                 }
             }
         }
@@ -228,25 +212,11 @@
                 {
                     if (await this.SearchDatabaseAsync() == false)
                     {
-                        this.ShowSearchWaiting.Value = Visibility.Collapsed;
-                        this.ShowDatabase.Value = Visibility.Collapsed;
-                        this.ShowNoDatabase.Value = Visibility.Visible;
-                        this.BtnBack.Visibility = Visibility.Collapsed;
-                        this.BtnDatabaseDelete.Visibility = Visibility.Collapsed;
-
-                        this.BtnDatabaseDelete.IsEnabled = false;
-                        this.BtnDatabaseStart.IsEnabled = false;
+                        this.SetCurrentDialog(SelectDialog.AddNewDatabase);
                     }
                     else
                     {
-                        this.ShowSearchWaiting.Value = Visibility.Collapsed;
-                        this.ShowDatabase.Value = Visibility.Visible;
-                        this.ShowNoDatabase.Value = Visibility.Collapsed;
-                        this.BtnBack.Visibility = Visibility.Visible;
-                        this.BtnDatabaseDelete.Visibility = Visibility.Visible;
-
-                        this.BtnDatabaseDelete.IsEnabled = true;
-                        this.BtnDatabaseStart.IsEnabled = true;
+                        this.SetCurrentDialog(SelectDialog.SelectDatabase);
                     }
                 }
             }
@@ -340,25 +310,11 @@
 
                 if (await this.SearchDatabaseAsync() == false)
                 {
-                    this.ShowSearchWaiting.Value = Visibility.Collapsed;
-                    this.ShowDatabase.Value = Visibility.Collapsed;
-                    this.ShowNoDatabase.Value = Visibility.Visible;
-                    this.BtnBack.Visibility = Visibility.Collapsed;
-                    this.BtnDatabaseDelete.Visibility = Visibility.Collapsed;
-
-                    this.BtnDatabaseDelete.IsEnabled = false;
-                    this.BtnDatabaseStart.IsEnabled = false;
+                    this.SetCurrentDialog(SelectDialog.AddNewDatabase);
                 }
                 else
                 {
-                    this.ShowSearchWaiting.Value = Visibility.Collapsed;
-                    this.ShowDatabase.Value = Visibility.Visible;
-                    this.ShowNoDatabase.Value = Visibility.Collapsed;
-                    this.BtnBack.Visibility = Visibility.Visible;
-                    this.BtnDatabaseDelete.Visibility = Visibility.Visible;
-
-                    this.BtnDatabaseDelete.IsEnabled = true;
-                    this.BtnDatabaseStart.IsEnabled = true;
+                    this.SetCurrentDialog(SelectDialog.SelectDatabase);
                 }
             }
         }
@@ -377,6 +333,41 @@
         private void BtnCreatePassword_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void SetCurrentDialog(SelectDialog selectDlg)
+        {
+            if (selectDlg == SelectDialog.AddNewDatabase)
+            {
+                this.ShowSearchWaiting.Value = Visibility.Collapsed;
+                this.ShowDatabase.Value = Visibility.Collapsed;
+                this.ShowNoDatabase.Value = Visibility.Visible;
+                this.BtnBack.Visibility = Visibility.Collapsed;
+                this.BtnDatabaseDelete.Visibility = Visibility.Collapsed;
+
+                this.BtnDatabaseDelete.IsEnabled = false;
+                this.BtnDatabaseStart.IsEnabled = false;
+            }
+            else if (selectDlg == SelectDialog.SelectDatabase)
+            {
+                this.ShowSearchWaiting.Value = Visibility.Collapsed;
+                this.ShowDatabase.Value = Visibility.Visible;
+                this.ShowNoDatabase.Value = Visibility.Collapsed;
+                this.BtnBack.Visibility = Visibility.Visible;
+                this.BtnDatabaseDelete.Visibility = Visibility.Visible;
+
+                this.BtnDatabaseDelete.IsEnabled = true;
+                this.BtnDatabaseStart.IsEnabled = true;
+            }
+            else if (selectDlg == SelectDialog.Waiting)
+            {
+                this.ShowNoDatabase.Value = Visibility.Collapsed;
+                this.ShowDatabase.Value = Visibility.Collapsed;
+                this.ShowSearchWaiting.Value = Visibility.Visible;
+            }
+            else if (selectDlg == SelectDialog.DeleteDatabase)
+            {
+            }
         }
     }
 }
