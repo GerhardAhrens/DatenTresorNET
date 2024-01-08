@@ -25,6 +25,8 @@
 
             WeakEventManager<Window, RoutedEventArgs>.AddHandler(this, "Loaded", this.OnLoaded);
             WeakEventManager<MenuItem, RoutedEventArgs>.AddHandler(this.MenuExit, "Click", this.BtnApplicationExit_Click);
+            WeakEventManager<TextBox, RoutedEventArgs>.AddHandler(this.TxtDatabaseName, "TextChanged", this.DatabaseName_TextChanged);
+            WeakEventManager<PasswordBox, RoutedEventArgs>.AddHandler(this.TxtNewPassword, "PasswordChanged", this.TxtCurrentPassword_PasswordChanged);
 
             this.DataContext = this;
         }
@@ -34,6 +36,8 @@
         public XamlProperty<Visibility> ShowDatabase { get; set; } = XamlProperty.Set<Visibility>();
 
         public XamlProperty<Visibility> ShowSearchWaiting { get; set; } = XamlProperty.Set<Visibility>();
+
+        public XamlProperty<Visibility> ShowQuestionYesNo { get; set; } = XamlProperty.Set<Visibility>();
 
         public XamlProperty<List<DatabaseParameter>> DatabaseNamesSource { get; set; } = XamlProperty.Set<List<DatabaseParameter>>();
 
@@ -47,7 +51,7 @@
 
         private async void OnLoaded(object sender, RoutedEventArgs e)
         {
-            this.SetCurrentDialog(SelectDialog.Waiting);
+            this.SetCurrentDialog(SelectDialog.QuestionDlg);
 
             using (ApplicationSettings settings = new ApplicationSettings())
             {
@@ -326,6 +330,26 @@
                 ((dynamic)this.DataContext).CurrentPassword = passwordBox.Password;
                 if (passwordBox.Password.Length > 0)
                 {
+                    this.BtnCreatePassword.IsEnabled = true;
+                }
+                else
+                {
+                    this.BtnCreatePassword.IsEnabled = false;
+                }
+            }
+        }
+
+        private void DatabaseName_TextChanged(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox textBox)
+            { 
+                if (textBox.Text.Length > 0)
+                {
+                    this.BtnDatabaseAdd.IsEnabled = true;
+                }
+                else
+                {
+                    this.BtnDatabaseAdd.IsEnabled = false;
                 }
             }
         }
@@ -339,12 +363,18 @@
         {
             if (selectDlg == SelectDialog.AddNewDatabase)
             {
+                this.TxtDatabaseName.Text = string.Empty;
+                this.TxtCurrentPassword.Password = string.Empty;
+                this.TxtNewPassword.Password = string.Empty;
+                this.TxtDescription.Text = string.Empty;
                 this.ShowSearchWaiting.Value = Visibility.Collapsed;
                 this.ShowDatabase.Value = Visibility.Collapsed;
                 this.ShowNoDatabase.Value = Visibility.Visible;
                 this.BtnBack.Visibility = Visibility.Collapsed;
                 this.BtnDatabaseDelete.Visibility = Visibility.Collapsed;
 
+                this.BtnCreatePassword.IsEnabled = false;
+                this.BtnDatabaseAdd.IsEnabled = false;
                 this.BtnDatabaseDelete.IsEnabled = false;
                 this.BtnDatabaseStart.IsEnabled = false;
             }
@@ -364,9 +394,14 @@
                 this.ShowNoDatabase.Value = Visibility.Collapsed;
                 this.ShowDatabase.Value = Visibility.Collapsed;
                 this.ShowSearchWaiting.Value = Visibility.Visible;
+                this.BtnDatabaseStart.IsEnabled = false;
             }
-            else if (selectDlg == SelectDialog.DeleteDatabase)
+            else if (selectDlg == SelectDialog.QuestionDlg)
             {
+                this.ShowNoDatabase.Value = Visibility.Collapsed;
+                this.ShowDatabase.Value = Visibility.Collapsed;
+                this.ShowSearchWaiting.Value = Visibility.Collapsed;
+                this.ShowQuestionYesNo.Value = Visibility.Visible;
             }
         }
     }

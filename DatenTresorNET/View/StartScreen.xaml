@@ -439,7 +439,46 @@
                     </StackPanel>
 
                 </Grid>
+            </GroupBox>
 
+            <GroupBox
+                x:Name="gbQuestionYesNo"
+                Grid.Row="2"
+                Margin="20"
+                Panel.ZIndex="5"
+                Visibility="{Binding Path=ShowQuestionYesNo.Value, UpdateSourceTrigger=PropertyChanged}">
+                <GroupBox.Header>
+                    <Border
+                        Background="#F2F2F2"
+                        BorderBrush="Black"
+                        BorderThickness="1"
+                        CornerRadius="2">
+                        <TextBlock Margin="3" Text="Aktion bestädigen" />
+                    </Border>
+                </GroupBox.Header>
+                <Grid Margin="10,10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="60" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2">
+                        <Run FontSize="14" Text="Soll die ausgewählte Datenbank gelöscht werden?" />
+                        <LineBreak />
+                        <Run FontSize="14" Text="Alle Daten die in der Datenbank gespeichert sind, werden ebenfalls gelöscht." />
+                    </TextBlock>
+
+                </Grid>
             </GroupBox>
             <!--#endregion Arbeitsbereich-->
 
