@@ -15,21 +15,32 @@
                 BorderBrush="Black"
                 BorderThickness="1"
                 CornerRadius="2">
-                <TextBlock Margin="3" Text="Aktion bestädigen" />
+                <TextBlock
+                    x:Name="tbTitle"
+                    Margin="3"
+                    Text="Aktion bestädigen" />
             </Border>
         </GroupBox.Header>
         <Grid Margin="10,10">
             <Grid.RowDefinitions>
-                <RowDefinition Height="60" />
-                <RowDefinition Height="30" />
-                <RowDefinition Height="30" />
-                <RowDefinition Height="30" />
+                <RowDefinition Height="10" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="140" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
+
+            <TextBlock
+                x:Name="tbDescription"
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                TextWrapping="Wrap" />
+
         </Grid>
     </GroupBox>
 </UserControl>

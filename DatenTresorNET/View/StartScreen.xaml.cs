@@ -25,8 +25,8 @@
 
             WeakEventManager<Window, RoutedEventArgs>.AddHandler(this, "Loaded", this.OnLoaded);
             WeakEventManager<MenuItem, RoutedEventArgs>.AddHandler(this.MenuExit, "Click", this.BtnApplicationExit_Click);
-            WeakEventManager<TextBox, RoutedEventArgs>.AddHandler(this.TxtDatabaseName, "TextChanged", this.DatabaseName_TextChanged);
-            WeakEventManager<PasswordBox, RoutedEventArgs>.AddHandler(this.TxtNewPassword, "PasswordChanged", this.TxtCurrentPassword_PasswordChanged);
+            //WeakEventManager<TextBox, RoutedEventArgs>.AddHandler(this.TxtDatabaseName, "TextChanged", this.DatabaseName_TextChanged);
+            //WeakEventManager<PasswordBox, RoutedEventArgs>.AddHandler(this.TxtNewPassword, "PasswordChanged", this.TxtCurrentPassword_PasswordChanged);
 
             this.DataContext = this;
         }
@@ -188,6 +188,7 @@
             return result;
         }
 
+        /*
         private async void BtnDatabaseAdd_Click(object sender, RoutedEventArgs e)
         {
             string dataBase = this.TxtDatabaseName.Text;
@@ -225,6 +226,7 @@
                 }
             }
         }
+        */
 
         private void BtnDatabaseAddNew_Click(object sender, RoutedEventArgs e)
         {
@@ -233,8 +235,8 @@
                 this.ShowSearchWaiting.Value = Visibility.Collapsed;
                 this.ShowDatabase.Value = Visibility.Collapsed;
                 this.ShowNoDatabase.Value = Visibility.Visible;
-                this.BtnDatabaseDelete.Visibility = Visibility.Collapsed;
-                this.BtnDatabaseAdd.IsEnabled = false;
+                //this.BtnDatabaseDelete.Visibility = Visibility.Collapsed;
+                //this.BtnDatabaseAdd.IsEnabled = false;
             }
         }
 
@@ -243,7 +245,7 @@
             this.ShowSearchWaiting.Value = Visibility.Collapsed;
             this.ShowDatabase.Value = Visibility.Visible;
             this.ShowNoDatabase.Value = Visibility.Collapsed;
-            this.BtnDatabaseDelete.Visibility = Visibility.Visible;
+            //this.BtnDatabaseDelete.Visibility = Visibility.Visible;
         }
 
         private void BtnDatabaseStart_Click(object sender, RoutedEventArgs e)
@@ -304,6 +306,7 @@
 
         private async void BtnDatabaseDelete_Click(object sender, RoutedEventArgs e)
         {
+            /*
             var selectEntry = this.cbDatabaseNamesSource.SelectedValue;
             string dbroot = ((DatabaseParameter)selectEntry).DatabaseFolder;
             string dbname = ((DatabaseParameter)selectEntry).DatabaseName;
@@ -321,6 +324,7 @@
                     this.SetCurrentDialog(SelectDialog.SelectDatabase);
                 }
             }
+            */
         }
 
         private void TxtCurrentPassword_PasswordChanged(object sender, RoutedEventArgs e)
@@ -330,11 +334,11 @@
                 ((dynamic)this.DataContext).CurrentPassword = passwordBox.Password;
                 if (passwordBox.Password.Length > 0)
                 {
-                    this.BtnCreatePassword.IsEnabled = true;
+                    //this.BtnCreatePassword.IsEnabled = true;
                 }
                 else
                 {
-                    this.BtnCreatePassword.IsEnabled = false;
+                    //this.BtnCreatePassword.IsEnabled = false;
                 }
             }
         }
@@ -345,11 +349,11 @@
             { 
                 if (textBox.Text.Length > 0)
                 {
-                    this.BtnDatabaseAdd.IsEnabled = true;
+                    //this.BtnDatabaseAdd.IsEnabled = true;
                 }
                 else
                 {
-                    this.BtnDatabaseAdd.IsEnabled = false;
+                    //this.BtnDatabaseAdd.IsEnabled = false;
                 }
             }
         }
@@ -361,6 +365,7 @@
 
         private void SetCurrentDialog(SelectDialog selectDlg)
         {
+            /*
             if (selectDlg == SelectDialog.AddNewDatabase)
             {
                 this.TxtDatabaseName.Text = string.Empty;
@@ -403,6 +408,7 @@
                 this.ShowSearchWaiting.Value = Visibility.Collapsed;
                 this.ShowQuestionYesNo.Value = Visibility.Visible;
             }
+            */
         }
     }
 }
