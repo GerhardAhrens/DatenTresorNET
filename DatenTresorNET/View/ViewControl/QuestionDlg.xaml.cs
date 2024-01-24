@@ -1,7 +1,6 @@
 ﻿namespace DatenTresorNET.View
 {
     using System;
-    using System.Runtime.CompilerServices;
     using System.Windows;
     using System.Windows.Controls;
 
@@ -25,7 +24,7 @@
         public QuestionDlg()
         {
             this.InitializeComponent();
-            //WeakEventManager<Button, RoutedEventArgs>.AddHandler(this.BtnOk, "Click", this.OnButtonClickOk);
+            WeakEventManager<Button, RoutedEventArgs>.AddHandler(this.BtnYes, "Click", this.OnButtonClickYes);
         }
 
         public bool IsOk
@@ -101,6 +100,11 @@
                 {
                 }
             }
+        }
+
+        private void OnButtonClickYes(object sender, RoutedEventArgs e)
+        {
+            this.IsOk = true;
         }
     }
 }

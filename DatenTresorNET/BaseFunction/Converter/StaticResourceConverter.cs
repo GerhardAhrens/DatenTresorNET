@@ -16,16 +16,10 @@
 namespace DatenTresorNET.BaseFunction
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
-    using System.Text;
-    using System.Linq;
-    using System.Threading.Tasks;
     using System.Globalization;
-    using System.Windows.Data;
     using System.Windows;
-    using Microsoft.Win32.SafeHandles;
-    using System.CodeDom;
+    using System.Windows.Data;
 
     public class StaticResourceConverter : IValueConverter
     {
@@ -74,6 +68,7 @@ namespace DatenTresorNET.BaseFunction
             this._IconMapping.Add("IconBack", "M20 6.91L17.09 4L12 9.09L6.91 4L4 6.91L9.09 12L4 17.09L6.91 20L12 14.91L17.09 20L20 17.09L14.91 12L20 6.91Z");
             this._IconMapping.Add("IconDatabaseDelete", "M2.39 1.73L1.11 3L4.21 6.1C4.08 6.39 4 6.69 4 7V17C4 19.21 7.59 21 12 21C14.3 21 16.38 20.5 17.84 19.73L20.84 22.73L22.11 21.46L2.39 1.73M6 9.64C6.76 10.07 7.7 10.42 8.76 10.65L12.11 14C12.07 14 12.04 14 12 14C9.58 14 7.3 13.4 6 12.45V9.64M12 19C8.13 19 6 17.5 6 17V14.77C7.61 15.55 9.72 16 12 16C12.68 16 13.34 15.95 14 15.87L16.34 18.23C15.33 18.65 13.87 19 12 19M8.64 5.44L7.06 3.86C8.42 3.33 10.13 3 12 3C16.42 3 20 4.79 20 7V16.8L18 14.8V14.77L18 14.78L16.45 13.25C17.05 13.03 17.58 12.76 18 12.45V9.64C16.97 10.22 15.61 10.65 14.06 10.86L12.19 9C15.94 8.94 18 7.5 18 7C18 6.5 15.87 5 12 5C10.66 5 9.54 5.18 8.64 5.44Z");
             this._IconMapping.Add("IconCreatePassword", "M14 15C14 16.11 13.11 17 12 17C10.89 17 10 16.1 10 15C10 13.89 10.89 13 12 13C13.11 13 14 13.9 14 15M13.09 20C13.21 20.72 13.46 21.39 13.81 22H6C4.89 22 4 21.1 4 20V10C4 8.89 4.89 8 6 8H7V6C7 3.24 9.24 1 12 1S17 3.24 17 6V8H18C19.11 8 20 8.9 20 10V13.09C19.67 13.04 19.34 13 19 13C18.66 13 18.33 13.04 18 13.09V10H6V20H13.09M9 8H15V6C15 4.34 13.66 3 12 3S9 4.34 9 6V8M21.34 15.84L17.75 19.43L16.16 17.84L15 19L17.75 22L22.5 17.25L21.34 15.84Z");
+            this._IconMapping.Add("IconButtonYes", "M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z");
             this._IconMapping.Add("None", "");
         }
     }

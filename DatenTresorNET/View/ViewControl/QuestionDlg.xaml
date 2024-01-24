@@ -28,6 +28,7 @@
                 <RowDefinition Height="30" />
                 <RowDefinition Height="40" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="40" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="140" />
@@ -41,6 +42,26 @@
                 Grid.ColumnSpan="2"
                 TextWrapping="Wrap" />
 
+            <StackPanel
+                Grid.Row="5"
+                Grid.Column="1"
+                FlowDirection="RightToLeft"
+                Orientation="Horizontal">
+                <Button
+                    x:Name="BtnNo"
+                    Grid.Row="5"
+                    Width="50"
+                    HorizontalAlignment="Right"
+                    Style="{StaticResource ResourceKey=FlatButtonNo}" />
+
+                <Button
+                    x:Name="BtnYes"
+                    Grid.Row="5"
+                    Width="50"
+                    Margin="10,0"
+                    HorizontalAlignment="Right"
+                    Style="{StaticResource ResourceKey=FlatButtonYes}" />
+            </StackPanel>
         </Grid>
     </GroupBox>
 </UserControl>
