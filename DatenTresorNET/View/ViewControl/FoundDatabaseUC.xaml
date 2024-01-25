@@ -61,7 +61,13 @@
                 Grid.Column="1"
                 FlowDirection="RightToLeft"
                 Orientation="Horizontal">
-                <Button />
+                <Button
+                    x:Name="BtnDatabaseStart"
+                    Grid.Row="5"
+                    Width="50"
+                    Margin="10,0"
+                    HorizontalAlignment="Right"
+                    Style="{StaticResource ResourceKey=FlatButtonDatabaseStart}" />
             </StackPanel>
         </Grid>
     </GroupBox>
