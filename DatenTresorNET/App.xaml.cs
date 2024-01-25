@@ -91,11 +91,18 @@
         private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             Debug.WriteLine($"{exeName}-{(e.Exception as Exception).Message}");
+            ErrorMessage(e.Exception);
+            e.Handled = false;
         }
 
         public static void ErrorMessage(Exception ex, string message = "")
         {
             string expMsg = ex.Message;
+            if (string.IsNullOrWhiteSpace(expMsg) == true)
+            {
+                return;
+            }
+
             var aex = ex as AggregateException;
 
             if (aex != null && aex.InnerExceptions.Count == 1)
