@@ -11,6 +11,7 @@
     using DatenTresorNET.BaseFunction;
     using DatenTresorNET.Core;
     using DatenTresorNET.Model;
+    using DatenTresorNET.View.ViewControl;
 
     using LiteDB;
 
@@ -43,6 +44,8 @@
 
         public XamlProperty<DatabaseParameter> DatabaseNameSelected { get; set; } = XamlProperty.Set<DatabaseParameter>(x => { StatusbarContent.DatabaseInfo = x.DatabaseName;});
 
+        public XamlProperty<UserControl> CurrentControl { get; set; } = XamlProperty.Set<UserControl>();
+
         public bool IsDatabase { get; set; }
 
         public string CurrentPassword { get; set; }
@@ -66,7 +69,7 @@
             {
                 if (await this.SearchDatabaseAsync() == false)
                 {
-                    this.SetCurrentDialog(SelectDialog.AddNewDatabase);
+                    this.CurrentControl.Value = new FoundDatabaseUC();
                 }
                 else
                 {

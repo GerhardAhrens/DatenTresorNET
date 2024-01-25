@@ -51,7 +51,8 @@
                     Grid.Row="5"
                     Width="50"
                     HorizontalAlignment="Right"
-                    Style="{StaticResource ResourceKey=FlatButtonNo}" />
+                    Content="{StaticResource ResourceKey=ButtonIsNoImage}"
+                    Style="{StaticResource ResourceKey=FlatButtonStyle}" />
 
                 <Button
                     x:Name="BtnYes"
@@ -59,7 +60,8 @@
                     Width="50"
                     Margin="10,0"
                     HorizontalAlignment="Right"
-                    Style="{StaticResource ResourceKey=FlatButtonYes}" />
+                    Content="{StaticResource ResourceKey=ButtonIsOkImage}"
+                    Style="{StaticResource ResourceKey=FlatButtonStyle}" />
             </StackPanel>
         </Grid>
     </GroupBox>

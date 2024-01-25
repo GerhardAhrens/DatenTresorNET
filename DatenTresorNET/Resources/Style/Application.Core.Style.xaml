@@ -110,6 +110,48 @@
         </Image.Source>
     </Image>
 
+    <Image
+        x:Key="ButtonDatabaseStartImage"
+        Width="24"
+        Height="28"
+        x:Shared="False">
+        <Image.Source>
+            <DrawingImage>
+                <DrawingImage.Drawing>
+                    <GeometryDrawing Brush="Blue" Geometry="M17.86 18L18.9 19C17.5 20.2 14.94 21 12 21C7.59 21 4 19.21 4 17V7C4 4.79 7.58 3 12 3C14.95 3 17.5 3.8 18.9 5L17.86 6L17.5 6.4C16.65 5.77 14.78 5 12 5C8.13 5 6 6.5 6 7S8.13 9 12 9C13.37 9 14.5 8.81 15.42 8.54L16.38 9.5H13.5V10.92C13 10.97 12.5 11 12 11C9.61 11 7.47 10.47 6 9.64V12.45C7.3 13.4 9.58 14 12 14C12.5 14 13 13.97 13.5 13.92V14.5H16.38L15.38 15.5L15.5 15.61C14.41 15.86 13.24 16 12 16C9.72 16 7.61 15.55 6 14.77V17C6 17.5 8.13 19 12 19C14.78 19 16.65 18.23 17.5 17.61L17.86 18M18.92 7.08L17.5 8.5L20 11H15V13H20L17.5 15.5L18.92 16.92L23.84 12L18.92 7.08Z" />
+                </DrawingImage.Drawing>
+            </DrawingImage>
+        </Image.Source>
+    </Image>
+
+    <Image
+        x:Key="ButtonDatabaseAddImage"
+        Width="24"
+        Height="28"
+        x:Shared="False">
+        <Image.Source>
+            <DrawingImage>
+                <DrawingImage.Drawing>
+                    <GeometryDrawing Brush="Blue" Geometry="M20 13.09V7C20 4.79 16.42 3 12 3S4 4.79 4 7V17C4 19.21 7.59 21 12 21C12.46 21 12.9 21 13.33 20.94C13.12 20.33 13 19.68 13 19L13 18.95C12.68 19 12.35 19 12 19C8.13 19 6 17.5 6 17V14.77C7.61 15.55 9.72 16 12 16C12.65 16 13.27 15.96 13.88 15.89C14.93 14.16 16.83 13 19 13C19.34 13 19.67 13.04 20 13.09M18 12.45C16.7 13.4 14.42 14 12 14S7.3 13.4 6 12.45V9.64C7.47 10.47 9.61 11 12 11S16.53 10.47 18 9.64V12.45M12 9C8.13 9 6 7.5 6 7S8.13 5 12 5 18 6.5 18 7 15.87 9 12 9M23 18V20H20V23H18V20H15V18H18V15H20V18H23Z" />
+                </DrawingImage.Drawing>
+            </DrawingImage>
+        </Image.Source>
+    </Image>
+
+    <Image
+        x:Key="ButtonApplicationExitImage"
+        Width="24"
+        Height="28"
+        x:Shared="False">
+        <Image.Source>
+            <DrawingImage>
+                <DrawingImage.Drawing>
+                    <GeometryDrawing Brush="Blue" Geometry="M19,3H5C3.89,3 3,3.89 3,5V9H5V5H19V19H5V15H3V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M10.08,15.58L11.5,17L16.5,12L11.5,7L10.08,8.41L12.67,11H3V13H12.67L10.08,15.58Z" />
+                </DrawingImage.Drawing>
+            </DrawingImage>
+        </Image.Source>
+    </Image>
+
     <Style TargetType="MenuItem">
         <Setter Property="Icon" Value="{StaticResource ResourceKey=MenuItemImage}" />
     </Style>
@@ -222,65 +264,12 @@
         </Setter>
     </Style>
 
-    <Style x:Key="FlatButtonGreen" TargetType="Button">
-        <Setter Property="Content" Value="{StaticResource ResourceKey=ButtonGreenImage}" />
-        <Setter Property="Background" Value="{x:Null}" />
-        <Setter Property="BorderBrush" Value="{x:Null}" />
-        <Setter Property="FontWeight" Value="Normal" />
-        <Setter Property="Foreground" Value="Green" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Border
-                        x:Name="border"
-                        Padding="{TemplateBinding Padding}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="3">
-                        <ContentPresenter
-                            Margin="{TemplateBinding Padding}"
-                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                            RecognizesAccessKey="True"
-                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsKeyboardFocused" Value="true" />
-                        <Trigger Property="IsDefaulted" Value="true" />
-                        <Trigger Property="IsPressed" Value="true" />
-                        <Trigger Property="ToggleButton.IsChecked" Value="true" />
-
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="{x:Null}" />
-                            <Setter Property="BorderBrush" Value="{x:Null}" />
-                            <Setter Property="Foreground" Value="Gray" />
-                            <Setter Property="FontWeight" Value="Bold" />
-                            <Setter TargetName="border" Property="Background" Value="LightGray" />
-                        </Trigger>
-
-                        <Trigger Property="IsFocused" Value="True">
-                            <Setter Property="FontWeight" Value="Bold" />
-                        </Trigger>
-
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
-                            <Setter Property="FontWeight" Value="Light" />
-                            <Setter Property="Background" Value="LightGray" />
-                            <Setter TargetName="border" Property="Background" Value="LightGray" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style x:Key="FlatButtonYes" TargetType="Button">
-        <Setter Property="Content" Value="{StaticResource ButtonIsOkImage}" />
+    <Style x:Key="FlatButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="{x:Null}" />
         <Setter Property="BorderBrush" Value="Gray" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="FontWeight" Value="Normal" />
-        <Setter Property="Foreground" Value="Green" />
+        <Setter Property="Foreground" Value="{x:Null}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
@@ -297,6 +286,7 @@
                             RecognizesAccessKey="True"
                             SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                     </Border>
+                    
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsKeyboardFocused" Value="true" />
                         <Trigger Property="IsDefaulted" Value="true" />
@@ -326,111 +316,4 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-    <Style x:Key="FlatButtonNo" TargetType="Button">
-        <Setter Property="Content" Value="{StaticResource ButtonIsNoImage}" />
-        <Setter Property="Background" Value="{x:Null}" />
-        <Setter Property="BorderBrush" Value="Gray" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="FontWeight" Value="Normal" />
-        <Setter Property="Foreground" Value="Red" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Border
-                        x:Name="border"
-                        Padding="{TemplateBinding Padding}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="3">
-                        <ContentPresenter
-                            Margin="{TemplateBinding Padding}"
-                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                            RecognizesAccessKey="True"
-                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsKeyboardFocused" Value="true" />
-                        <Trigger Property="IsDefaulted" Value="true" />
-                        <Trigger Property="IsPressed" Value="true" />
-                        <Trigger Property="ToggleButton.IsChecked" Value="true" />
-
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="{x:Null}" />
-                            <Setter Property="BorderBrush" Value="{x:Null}" />
-                            <Setter Property="Foreground" Value="Gray" />
-                            <Setter Property="FontWeight" Value="Bold" />
-                            <Setter TargetName="border" Property="Background" Value="LightGray" />
-                        </Trigger>
-
-                        <Trigger Property="IsFocused" Value="True">
-                            <Setter Property="FontWeight" Value="Bold" />
-                        </Trigger>
-
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
-                            <Setter Property="FontWeight" Value="Light" />
-                            <Setter Property="Background" Value="LightGray" />
-                            <Setter TargetName="border" Property="Background" Value="LightGray" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style x:Key="FlatButtonDatabaseStart" TargetType="Button">
-        <Setter Property="Content" Value="{StaticResource ButtonIsOkImage}" />
-        <Setter Property="Background" Value="{x:Null}" />
-        <Setter Property="BorderBrush" Value="Gray" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="FontWeight" Value="Normal" />
-        <Setter Property="Foreground" Value="Green" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Border
-                        x:Name="border"
-                        Padding="{TemplateBinding Padding}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="3">
-                        <ContentPresenter
-                            Margin="{TemplateBinding Padding}"
-                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                            RecognizesAccessKey="True"
-                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsKeyboardFocused" Value="true" />
-                        <Trigger Property="IsDefaulted" Value="true" />
-                        <Trigger Property="IsPressed" Value="true" />
-                        <Trigger Property="ToggleButton.IsChecked" Value="true" />
-
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="{x:Null}" />
-                            <Setter Property="BorderBrush" Value="{x:Null}" />
-                            <Setter Property="Foreground" Value="Gray" />
-                            <Setter Property="FontWeight" Value="Bold" />
-                            <Setter TargetName="border" Property="Background" Value="LightGray" />
-                        </Trigger>
-
-                        <Trigger Property="IsFocused" Value="True">
-                            <Setter Property="FontWeight" Value="Bold" />
-                        </Trigger>
-
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
-                            <Setter Property="FontWeight" Value="Light" />
-                            <Setter Property="Background" Value="LightGray" />
-                            <Setter TargetName="border" Property="Background" Value="LightGray" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
 </ResourceDictionary>

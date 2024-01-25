@@ -135,11 +135,24 @@
                 </MenuItem>
             </Menu>
 
+            <ContentControl
+                x:Name="mainContent"
+                Grid.Row="2"
+                Grid.Column="0"
+                Background="Silver"
+                Content="{Binding Path=CurrentControl.Value, UpdateSourceTrigger=PropertyChanged}"
+                KeyboardNavigation.IsTabStop="False"
+                KeyboardNavigation.TabNavigation="None"
+                ScrollViewer.CanContentScroll="False"
+                Visibility="Visible" />
+
+            <!--
             <localUC:QuestionDlg
                 Title="Test"
                 Grid.Row="2"
                 DescFontWeight="Medium"
                 Description="Fragestellung&#10;Test&#10;Test" />
+            -->
 
             <!--
             <GroupBox
