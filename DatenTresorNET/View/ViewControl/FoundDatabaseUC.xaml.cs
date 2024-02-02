@@ -18,7 +18,7 @@
 
         private string DatabaseLocation { get; set; }
 
-        private async void OnLoaded(object sender, RoutedEventArgs e)
+        private void OnLoaded(object sender, RoutedEventArgs e)
         {
             using (ApplicationSettings settings = new ApplicationSettings())
             {
