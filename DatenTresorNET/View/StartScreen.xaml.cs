@@ -67,128 +67,22 @@
 
             if (string.IsNullOrEmpty(this.DatabaseLocation) == false)
             {
-                if (await this.SearchDatabaseAsync() == false)
+                using (DatabaseSearcher ds = new DatabaseSearcher(this.DatabaseLocation))
                 {
-                    this.CurrentControl.Value = new FoundDatabaseUC();
-                }
-                else
-                {
-                    this.SetCurrentDialog(SelectDialog.SelectDatabase);
+                    if (await ds.SearchDatabaseAsync() == false)
+                    {
+                        this.CurrentControl.Value = new NoFoundDatabaseUC();
+                        if (await ds.SearchDatabaseAsync() == true)
+                        {
+
+                        }
+                    }
+                    else
+                    {
+                        this.SetCurrentDialog(SelectDialog.SelectDatabase);
+                    }
                 }
             }
-        }
-
-        public async Task<bool> SearchDatabaseAsync()
-        {
-            return await Task.Run(() =>
-            {
-                return this.SearchDatabase();
-            });
-        }
-        private bool SearchDatabase()
-        {
-            bool result = false;
-
-            if (Directory.Exists(this.DatabaseLocation) == false)
-            {
-                Directory.CreateDirectory(this.DatabaseLocation);
-            }
-
-            this.Dispatcher.Invoke(new Action(() => {
-                var dbs = Directory.EnumerateFiles(this.DatabaseLocation, "*.db", SearchOption.TopDirectoryOnly);
-                this.IsDatabase = dbs.Any();
-                if (this.IsDatabase == true)
-                {
-                    if (this.DatabaseNamesSource.Value == null)
-                    {
-                        this.DatabaseNamesSource.Value = new List<DatabaseParameter>();
-                    }
-
-                    foreach (string db in dbs)
-                    {
-                        ConnectionString dbconn = this.Connection(db, null);
-                        LiteDatabase litedb = new LiteDatabase(dbconn);
-                        ILiteCollection<DatabaseInformation> databaseInformationCollection = litedb.GetCollection<DatabaseInformation>(typeof(DatabaseInformation).Name);
-                        DatabaseInformation dbinfo = databaseInformationCollection.FindAll().First();
-
-                        DatabaseParameter dbparam = new DatabaseParameter();
-                        if (dbs.Count() == 1)
-                        {
-                            dbparam.Default = true;
-                        }
-                        else
-                        {
-                            dbparam.Default = false;
-                        }
-
-                        dbparam.DatabaseFolder = System.IO.Path.GetDirectoryName(db);
-                        dbparam.DatabaseName = System.IO.Path.GetFileName(db);
-                        dbparam.Description = dbinfo.Description;
-                        this.DatabaseNamesSource.Value.Add(dbparam);
-                        litedb.Dispose();
-                        litedb = null;
-                    }
-
-                    using (ApplicationSettings settings = new ApplicationSettings())
-                    {
-                        if (settings.IsExitSettings() == true)
-                        {
-                            settings.Load();
-                        }
-
-                        if (settings.Databases.Count() != dbs.Count())
-                        {
-                            settings.Databases.Clear();
-                            if (this.DatabaseNamesSource.Value != null)
-                            {
-                                foreach (DatabaseParameter item in this.DatabaseNamesSource.Value)
-                                {
-                                    DatabaseParameter dp = new DatabaseParameter();
-                                    dp.DatabaseName = item.DatabaseName;
-                                    dp.DatabaseFolder = this.DatabaseLocation;
-                                    dp.Description = item.Description;
-                                    dp.PasswordHash = item.PasswordHash;
-                                    settings.Databases.Add(dp);
-                                }
-
-                                settings.Save();
-                            }
-
-                        }
-                        else
-                        {
-                            foreach (DatabaseParameter item in this.DatabaseNamesSource.Value)
-                            {
-                                if (settings.Databases.Count() == 1)
-                                {
-                                    item.Default = true;
-                                    break;
-                                }
-                                else
-                                {
-                                    if (item.DatabaseName == settings.Databases.FirstOrDefault(f => f.Default == true).DatabaseName)
-                                    {
-                                        item.Default = true;
-                                    }
-                                }
-                            }
-
-                            this.DatabaseNamesSource.Value = this.DatabaseNamesSource.Value.OrderBy(x => x.Default).ToList();
-                            this.DatabaseNameSelected.Value = this.DatabaseNamesSource.Value.FirstOrDefault(f => f.Default == true);
-                        }
-                    }
-
-                    result = true;
-                }
-                else
-                {
-                    StatusbarContent.DatabaseInfo = "Keine Datenbank vorhanden!";
-                    Task.Delay(5000);
-                }
-
-            }), DispatcherPriority.Background);
-
-            return result;
         }
 
         /*

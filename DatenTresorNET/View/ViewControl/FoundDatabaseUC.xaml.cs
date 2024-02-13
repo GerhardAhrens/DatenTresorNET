@@ -30,5 +30,31 @@
             }
 
         }
+
+        private void TxtCurrentPassword_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (this.DataContext != null && sender is PasswordBox passwordBox)
+            {
+                ((dynamic)this.DataContext).CurrentPassword = passwordBox.Password;
+                if (passwordBox.Password.Length > 0)
+                {
+                    //this.BtnCreatePassword.IsEnabled = true;
+                }
+                else
+                {
+                    //this.BtnCreatePassword.IsEnabled = false;
+                }
+            }
+        }
+
+        private void BtnApplicationExit_Click(object sender, RoutedEventArgs e)
+        {
+            Window window = Application.Current.Windows.Cast<Window>().Single(s => s.IsActive == true);
+            if (window.IsActive == true)
+            {
+                window.DialogResult = false;
+                window.Close();
+            }
+        }
     }
 }

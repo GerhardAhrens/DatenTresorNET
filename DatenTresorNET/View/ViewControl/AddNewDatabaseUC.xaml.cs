@@ -1,19 +1,9 @@
 ﻿namespace DatenTresorNET.View.ViewControl
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
-    using System.Windows.Data;
-    using System.Windows.Documents;
-    using System.Windows.Input;
-    using System.Windows.Media;
-    using System.Windows.Media.Imaging;
-    using System.Windows.Navigation;
-    using System.Windows.Shapes;
+
+    using DatenTresorNET.Core;
 
     /// <summary>
     /// Interaktionslogik für AddNewDatabaseUC.xaml
@@ -22,7 +12,23 @@
     {
         public AddNewDatabaseUC()
         {
-            InitializeComponent();
+            this.InitializeComponent();
+            WeakEventManager<UserControl, RoutedEventArgs>.AddHandler(this, "Loaded", this.OnLoaded);
+        }
+
+        private string DatabaseLocation { get; set; }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            using (ApplicationSettings settings = new ApplicationSettings())
+            {
+                if (settings.IsExitSettings() == true)
+                {
+                    settings.Load();
+                    this.DatabaseLocation = settings.DatabaseFolder;
+                }
+            }
+
         }
     }
 }

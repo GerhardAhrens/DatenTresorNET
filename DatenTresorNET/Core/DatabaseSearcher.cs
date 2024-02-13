@@ -20,8 +20,15 @@ namespace DatenTresorNET.Core
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class DatabaseSearcher
+    using DatenTresorNET.BaseFunction;
+    using DatenTresorNET.Model;
+
+    using LiteDB;
+
+    public class DatabaseSearcher : IDisposable
     {
+        private bool disposedValue;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DatabaseSearcher"/> class.
         /// </summary>
@@ -30,7 +37,14 @@ namespace DatenTresorNET.Core
             this.DatabaseLocation = databaseLocation;
         }
 
-        public List<DatabaseParameter> DatabaseNamesSource { get; set; }
+         ~DatabaseSearcher()
+        {
+            this.Dispose(disposing: false);
+        }
+
+        public List<DatabaseParameter> DatabaseNamesSource { get; private set; }
+
+        public DatabaseParameter DatabaseNameSelected { get; private set; }
 
         private string DatabaseLocation { get; set; }
 
@@ -59,9 +73,129 @@ namespace DatenTresorNET.Core
                     this.DatabaseNamesSource = new List<DatabaseParameter>();
                 }
 
+                foreach (string db in dbs)
+                {
+                    ConnectionString dbconn = null;
+                    using (DBConnectionBuilder builder = new DBConnectionBuilder())
+                    {
+                        dbconn = builder.GetConnection(db, null);
+                    }
+
+                    LiteDatabase litedb = new LiteDatabase(dbconn);
+                    ILiteCollection<DatabaseInformation> databaseInformationCollection = litedb.GetCollection<DatabaseInformation>(typeof(DatabaseInformation).Name);
+                    DatabaseInformation dbinfo = databaseInformationCollection.FindAll().First();
+
+                    DatabaseParameter dbparam = new DatabaseParameter();
+                    if (dbs.Count() == 1)
+                    {
+                        dbparam.Default = true;
+                    }
+                    else
+                    {
+                        dbparam.Default = false;
+                    }
+
+                    dbparam.DatabaseFolder = System.IO.Path.GetDirectoryName(db);
+                    dbparam.DatabaseName = System.IO.Path.GetFileName(db);
+                    dbparam.Description = dbinfo.Description;
+                    this.DatabaseNamesSource.Add(dbparam);
+                    litedb.Dispose();
+                    litedb = null;
+                }
+
+                using (ApplicationSettings settings = new ApplicationSettings())
+                {
+                    if (settings.IsExitSettings() == true)
+                    {
+                        settings.Load();
+                    }
+
+                    if (settings.Databases.Count() != dbs.Count())
+                    {
+                        settings.Databases.Clear();
+                        if (this.DatabaseNamesSource != null)
+                        {
+                            foreach (DatabaseParameter item in this.DatabaseNamesSource)
+                            {
+                                DatabaseParameter dp = new DatabaseParameter();
+                                dp.DatabaseName = item.DatabaseName;
+                                dp.DatabaseFolder = this.DatabaseLocation;
+                                dp.Description = item.Description;
+                                dp.PasswordHash = item.PasswordHash;
+                                settings.Databases.Add(dp);
+                            }
+
+                            settings.Save();
+                        }
+                        else
+                        {
+                            foreach (DatabaseParameter item in this.DatabaseNamesSource)
+                            {
+                                if (settings.Databases.Count() == 1)
+                                {
+                                    item.Default = true;
+                                    break;
+                                }
+                                else
+                                {
+                                    if (item.DatabaseName == settings.Databases.FirstOrDefault(f => f.Default == true).DatabaseName)
+                                    {
+                                        item.Default = true;
+                                    }
+                                }
+                            }
+
+                            this.DatabaseNamesSource = this.DatabaseNamesSource.OrderBy(x => x.Default).ToList();
+                            this.DatabaseNameSelected = this.DatabaseNamesSource.FirstOrDefault(f => f.Default == true);
+                        }
+                    }
+                }
+
+                result = true;
+            }
+            else
+            {
+                StatusbarContent.DatabaseInfo = "Keine Datenbank vorhanden!";
+                Task.Delay(5000);
             }
 
             return result;
         }
+
+        private ConnectionString Connection(string databaseFile, string password)
+        {
+            ConnectionString conn = new ConnectionString(databaseFile);
+            conn.Connection = ConnectionType.Shared;
+            if (string.IsNullOrEmpty(password) == false)
+            {
+                conn.Password = password;
+            }
+
+            return conn;
+        }
+
+        #region Dispose 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposedValue == false)
+            {
+                if (disposing)
+                {
+                    // TODO: Verwalteten Zustand (verwaltete Objekte) bereinigen
+                }
+
+                // TODO: Nicht verwaltete Ressourcen (nicht verwaltete Objekte) freigeben und Finalizer überschreiben
+                // TODO: Große Felder auf NULL setzen
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            // Ändern Sie diesen Code nicht. Fügen Sie Bereinigungscode in der Methode "Dispose(bool disposing)" ein.
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion Dispose
     }
 }
