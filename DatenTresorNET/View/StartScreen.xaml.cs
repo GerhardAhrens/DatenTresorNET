@@ -1,16 +1,12 @@
 ﻿namespace DatenTresorNET.View
 {
-    using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
-    using System.Windows.Threading;
 
     using DatenTresorNET.BaseFunction;
     using DatenTresorNET.Core;
-    using DatenTresorNET.Model;
     using DatenTresorNET.View.ViewControl;
 
     using LiteDB;
@@ -25,9 +21,8 @@
             this.InitializeComponent();
 
             WeakEventManager<Window, RoutedEventArgs>.AddHandler(this, "Loaded", this.OnLoaded);
-            WeakEventManager<MenuItem, RoutedEventArgs>.AddHandler(this.MenuExit, "Click", this.BtnApplicationExit_Click);
-            //WeakEventManager<TextBox, RoutedEventArgs>.AddHandler(this.TxtDatabaseName, "TextChanged", this.DatabaseName_TextChanged);
-            //WeakEventManager<PasswordBox, RoutedEventArgs>.AddHandler(this.TxtNewPassword, "PasswordChanged", this.TxtCurrentPassword_PasswordChanged);
+            WeakEventManager<Button, RoutedEventArgs>.AddHandler(this.BtnApplicationExit, "Click", this.OnButtonClick);
+            WeakEventManager<Button, RoutedEventArgs>.AddHandler(this.BtnAddDatabase, "Click", this.OnButtonClick);
 
             this.DataContext = this;
         }
@@ -176,17 +171,19 @@
             }
         }
 
-        private void BtnApplicationExit_Click(object sender, RoutedEventArgs e)
+        private void OnButtonClick(object sender, RoutedEventArgs e)
         {
-            if (this.IsActive == true)
+            Button button = (Button)sender;
+            ToolbarButtons tagEnum = (ToolbarButtons)button.Tag;
+            if (tagEnum == ToolbarButtons.ApplicationExit)
             {
                 this.DialogResult = false;
                 this.Close();
             }
-        }
+            else if (tagEnum == ToolbarButtons.AddDatabase)
+            {
 
-        private void MenuSettings_Click(object sender, RoutedEventArgs e)
-        {
+            }
         }
 
         private ConnectionString Connection(string databaseFile, string password)
@@ -201,7 +198,7 @@
             return conn;
         }
 
-        private async void BtnDatabaseDelete_Click(object sender, RoutedEventArgs e)
+        private void BtnDatabaseDelete_Click(object sender, RoutedEventArgs e)
         {
             /*
             var selectEntry = this.cbDatabaseNamesSource.SelectedValue;

@@ -1,6 +1,7 @@
 ﻿namespace DatenTresorNET
 {
     using DatenTresorNET.BaseFunction;
+    using DatenTresorNET.BaseFunction.Pattern;
     using DatenTresorNET.Core;
     using DatenTresorNET.View;
 
@@ -38,8 +39,12 @@
             /* Initalisierung Spracheinstellung */
             InitializeCultures(DEFAULTLANGUAGE);
 
+            EventAgg = new EventAggregator();
+
             App.Current.DispatcherUnhandledException += this.OnDispatcherUnhandledException;
         }
+
+        public static EventAggregator EventAgg { get; private set; }
 
         /// <summary>
         /// Festlegung für Abfrage des Programmendedialog

@@ -14,17 +14,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="BaseFunction\Pattern\Observer\" />
     <Folder Include="BaseFunction\Pattern\Result\" />
     <Folder Include="BaseFunction\XamlHelper\" />
     <Folder Include="BaseFunction\Pattern\Disposable\" />
     <Folder Include="BaseFunction\Settings\" />
     <Folder Include="Core\Grafik\" />
+    <Folder Include="Core\EventArgs\" />
     <Folder Include="DataRepository\Base\" />
     <Folder Include="Extension\" />
     <Folder Include="Resources\XamlIcon\" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Core\Enums\ToolbarButtons.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\ViewControl\NoFoundDatabaseUC.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

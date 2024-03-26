@@ -152,6 +152,34 @@
         </Image.Source>
     </Image>
 
+    <Image
+        x:Key="ButtonInfo"
+        Width="24"
+        Height="28"
+        x:Shared="False">
+        <Image.Source>
+            <DrawingImage>
+                <DrawingImage.Drawing>
+                    <GeometryDrawing Brush="Blue" Geometry="M11 9H13V7H11V9M14 17V15H13V11H10V13H11V15H10V17H14M5 3H19C20.1 3 21 3.89 21 5V19C21 19.53 20.79 20.04 20.41 20.41C20.04 20.79 19.53 21 19 21H5C4.47 21 3.96 20.79 3.59 20.41C3.21 20.04 3 19.53 3 19V5C3 3.89 3.89 3 5 3M19 19V5H5V19H19Z" />
+                </DrawingImage.Drawing>
+            </DrawingImage>
+        </Image.Source>
+    </Image>
+
+    <Image
+        x:Key="Button3Dots"
+        Width="24"
+        Height="28"
+        x:Shared="False">
+        <Image.Source>
+            <DrawingImage>
+                <DrawingImage.Drawing>
+                    <GeometryDrawing Brush="Blue" Geometry="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z" />
+                </DrawingImage.Drawing>
+            </DrawingImage>
+        </Image.Source>
+    </Image>
+
     <Style TargetType="MenuItem">
         <Setter Property="Icon" Value="{StaticResource ResourceKey=MenuItemImage}" />
     </Style>
@@ -286,7 +314,7 @@
                             RecognizesAccessKey="True"
                             SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                     </Border>
-                    
+
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsKeyboardFocused" Value="true" />
                         <Trigger Property="IsDefaulted" Value="true" />

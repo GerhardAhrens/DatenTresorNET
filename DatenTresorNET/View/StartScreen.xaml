@@ -6,7 +6,6 @@
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:localConverter="clr-namespace:DatenTresorNET.BaseFunction"
     xmlns:localStatic="clr-namespace:DatenTresorNET.Core"
-    xmlns:localUC="clr-namespace:DatenTresorNET.View"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="StartScreen"
     Width="800"
@@ -33,7 +32,7 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="70" />
-                <RowDefinition Height="30" />
+                <RowDefinition Height="60" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="40" />
             </Grid.RowDefinitions>
@@ -106,34 +105,57 @@
                 </StackPanel>
             </Grid>
 
-            <Menu Grid.Row="1" Grid.Column="0">
-                <MenuItem Header="Applikation" Tag="IconApplication">
-                    <MenuItem
-                        x:Name="MenuSettings"
-                        Click="MenuSettings_Click"
-                        Header="_Einstellungen"
-                        Tag="IconSetting" />
+            <StackPanel
+                Grid.Row="1"
+                Grid.Column="0"
+                Orientation="Horizontal">
+                <Button
+                    x:Name="BtnApplicationExit"
+                    Width="50"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom"
+                    Content="{StaticResource ResourceKey=ButtonApplicationExitImage}"
+                    Style="{StaticResource ResourceKey=FlatButtonStyle}"
+                    Tag="{x:Static localStatic:ToolbarButtons.ApplicationExit}" />
 
-                    <MenuItem
-                        x:Name="MenuExit"
-                        Click="BtnApplicationExit_Click"
-                        Header="_Beenden"
-                        Tag="IconExit" />
-                </MenuItem>
+                <Button
+                    x:Name="BtnAddDatabase"
+                    Width="50"
+                    Margin="5,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom"
+                    Content="{StaticResource ResourceKey=ButtonDatabaseAddImage}"
+                    Style="{StaticResource ResourceKey=FlatButton}" />
 
-                <MenuItem Header="Datentresor" Tag="IconDatabase">
-                    <MenuItem
-                        x:Name="MenuDTCreate"
-                        Header="_Erstellen"
-                        Tag="IconDatabaseAdd" />
-                    <MenuItem
-                        x:Name="MenuDTDelete"
-                        Header="_Löschen"
-                        Tag="IconDatabaseRemove" />
-                    <MenuItem x:Name="MenuDTLocation" Header="_Speicherort" />
-                    <MenuItem x:Name="MenuDTPassword" Header="_Passwort ändern" />
-                </MenuItem>
-            </Menu>
+                <Button
+                    x:Name="BtnDatabaseDelete"
+                    Width="50"
+                    Margin="5,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom"
+                    Content="{StaticResource ResourceKey=ButtonIsNoImage}"
+                    Style="{StaticResource ResourceKey=FlatButton}" />
+
+                <Button
+                    x:Name="BtnDatabaseStart"
+                    Grid.Row="5"
+                    Width="50"
+                    Margin="5,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom"
+                    Content="{StaticResource ResourceKey=ButtonDatabaseStartImage}"
+                    Style="{StaticResource ResourceKey=FlatButton}" />
+
+                <Button
+                    x:Name="BtnInfo"
+                    Grid.Row="5"
+                    Width="50"
+                    Margin="5,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom"
+                    Content="{StaticResource ResourceKey=ButtonInfo}"
+                    Style="{StaticResource ResourceKey=FlatButton}" />
+            </StackPanel>
 
             <ContentControl
                 x:Name="mainContent"
