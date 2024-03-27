@@ -20,17 +20,16 @@
     <Folder Include="BaseFunction\Pattern\Disposable\" />
     <Folder Include="BaseFunction\Settings\" />
     <Folder Include="Core\Grafik\" />
-    <Folder Include="Core\EventArgs\" />
     <Folder Include="DataRepository\Base\" />
     <Folder Include="Extension\" />
     <Folder Include="Resources\XamlIcon\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Core\Enums\ToolbarButtons.cs">
+    <Compile Update="Core\Enums\MessageQuestion.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\ViewControl\NoFoundDatabaseUC.xaml.cs">
+    <Compile Update="Core\Enums\ToolbarButtons.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

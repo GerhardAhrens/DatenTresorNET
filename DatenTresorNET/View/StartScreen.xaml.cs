@@ -1,9 +1,12 @@
 ﻿namespace DatenTresorNET.View
 {
+    using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Xml.Linq;
 
     using DatenTresorNET.BaseFunction;
     using DatenTresorNET.Core;
@@ -23,34 +26,23 @@
             WeakEventManager<Window, RoutedEventArgs>.AddHandler(this, "Loaded", this.OnLoaded);
             WeakEventManager<Button, RoutedEventArgs>.AddHandler(this.BtnApplicationExit, "Click", this.OnButtonClick);
             WeakEventManager<Button, RoutedEventArgs>.AddHandler(this.BtnAddDatabase, "Click", this.OnButtonClick);
+            WeakEventManager<Button, RoutedEventArgs>.AddHandler(this.BtnDatabaseDelete, "Click", this.OnButtonClick);
+            WeakEventManager<Button, RoutedEventArgs>.AddHandler(this.BtnInfo, "Click", this.OnButtonClick);
+
+            App.EventAgg.Subscribe<SelectDatabaseEventArgs>(this.SetDatabase);
+            App.EventAgg.Subscribe<MessageEventArgs>(this.SetMessageQuestion);
 
             this.DataContext = this;
         }
 
-        public XamlProperty<Visibility> ShowNoDatabase { get; set; } = XamlProperty.Set<Visibility>();
-
-        public XamlProperty<Visibility> ShowDatabase { get; set; } = XamlProperty.Set<Visibility>();
-
-        public XamlProperty<Visibility> ShowSearchWaiting { get; set; } = XamlProperty.Set<Visibility>();
-
-        public XamlProperty<Visibility> ShowQuestionYesNo { get; set; } = XamlProperty.Set<Visibility>();
-
-        public XamlProperty<List<DatabaseParameter>> DatabaseNamesSource { get; set; } = XamlProperty.Set<List<DatabaseParameter>>();
-
-        public XamlProperty<DatabaseParameter> DatabaseNameSelected { get; set; } = XamlProperty.Set<DatabaseParameter>(x => { StatusbarContent.DatabaseInfo = x.DatabaseName;});
-
         public XamlProperty<UserControl> CurrentControl { get; set; } = XamlProperty.Set<UserControl>();
-
-        public bool IsDatabase { get; set; }
-
-        public string CurrentPassword { get; set; }
 
         private string DatabaseLocation { get; set; }
 
+        private DatabaseParameter CurrentSelectedDatabase { get; set; }
+
         private async void OnLoaded(object sender, RoutedEventArgs e)
         {
-            this.SetCurrentDialog(SelectDialog.QuestionDlg);
-
             using (ApplicationSettings settings = new ApplicationSettings())
             {
                 if (settings.IsExitSettings() == true)
@@ -120,57 +112,6 @@
         }
         */
 
-        private void BtnDatabaseAddNew_Click(object sender, RoutedEventArgs e)
-        {
-            if (string.IsNullOrEmpty(this.DatabaseLocation) == false)
-            {
-                this.ShowSearchWaiting.Value = Visibility.Collapsed;
-                this.ShowDatabase.Value = Visibility.Collapsed;
-                this.ShowNoDatabase.Value = Visibility.Visible;
-                //this.BtnDatabaseDelete.Visibility = Visibility.Collapsed;
-                //this.BtnDatabaseAdd.IsEnabled = false;
-            }
-        }
-
-        private void BtnBack_Click(object sender, RoutedEventArgs e)
-        {
-            this.ShowSearchWaiting.Value = Visibility.Collapsed;
-            this.ShowDatabase.Value = Visibility.Visible;
-            this.ShowNoDatabase.Value = Visibility.Collapsed;
-            //this.BtnDatabaseDelete.Visibility = Visibility.Visible;
-        }
-
-        private void BtnDatabaseStart_Click(object sender, RoutedEventArgs e)
-        {
-            if (this.IsActive == true)
-            {
-                this.DialogResult = true;
-                this.Close();
-
-                using (ApplicationSettings settings = new ApplicationSettings())
-                {
-                    if (settings.IsExitSettings() == true)
-                    {
-                        settings.Load();
-                    }
-
-                    if (settings.Databases?.Any() == true)
-                    {
-                        foreach (DatabaseParameter dbParam in settings.Databases)
-                        {
-                            dbParam.Default = false;
-                        }
-
-                        string selectedName = DatabaseNameSelected.Value.DatabaseName;
-                        DatabaseParameter dp = settings.Databases.First(f => f.DatabaseName.ToLower() == selectedName.ToLower());
-                        dp.Default = true;
-                        settings.Save();
-                    }
-                }
-
-            }
-        }
-
         private void OnButtonClick(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
@@ -182,7 +123,59 @@
             }
             else if (tagEnum == ToolbarButtons.AddDatabase)
             {
+                this.CreateNewDatabase();
+            }
+            else if (tagEnum == ToolbarButtons.DeleteDatabase)
+            {
+                this.DeleteDatabase();
+            }
+            else if (tagEnum == ToolbarButtons.InfoDatabase)
+            {
+                this.InfoDatabase();
+            }
+        }
 
+        private void SetDatabase(SelectDatabaseEventArgs args)
+        {
+            this.CurrentSelectedDatabase = args.SelectDatabase;
+        }
+
+        private async void SetMessageQuestion(MessageEventArgs args)
+        {
+            if (args.Sender == typeof(QuestionDlg) && args.MsgQuestion == MessageQuestion.Yes)
+            {
+                string fullname = Path.Combine(this.CurrentSelectedDatabase.DatabaseFolder, this.CurrentSelectedDatabase.DatabaseName);
+                if (File.Exists(fullname) == true)
+                {
+                    //File.Delete(fullname);
+
+                    using (DatabaseSearcher ds = new DatabaseSearcher(this.DatabaseLocation))
+                    {
+                        if (await ds.SearchDatabaseAsync() == false)
+                        {
+                            this.SetCurrentDialog(SelectDialog.AddNewDatabase);
+                        }
+                        else
+                        {
+                            this.SetCurrentDialog(SelectDialog.SelectDatabase);
+                        }
+                    }
+                }
+            }
+            else if (args.Sender == typeof(QuestionDlg) && args.MsgQuestion == MessageQuestion.No)
+            {
+                this.SetCurrentDialog(SelectDialog.SelectDatabase);
+            }
+            else if (args.Sender == typeof(QuestionDlg) && args.MsgQuestion == MessageQuestion.Ok)
+            {
+                this.SetCurrentDialog(SelectDialog.SelectDatabase);
+            }
+            if (args.Sender == typeof(AddNewDatabaseUC) && args.MsgQuestion == MessageQuestion.Yes)
+            {
+            }
+            else
+            {
+                this.SetCurrentDialog(SelectDialog.SelectDatabase);
             }
         }
 
@@ -198,27 +191,31 @@
             return conn;
         }
 
-        private void BtnDatabaseDelete_Click(object sender, RoutedEventArgs e)
+        private void DeleteDatabase()
         {
-            /*
-            var selectEntry = this.cbDatabaseNamesSource.SelectedValue;
-            string dbroot = ((DatabaseParameter)selectEntry).DatabaseFolder;
-            string dbname = ((DatabaseParameter)selectEntry).DatabaseName;
-            string fullname = System.IO.Path.Combine(dbroot, dbname);
-            if (File.Exists(fullname) == true)
-            {
-                File.Delete(fullname);
+            string dbname = this.CurrentSelectedDatabase.DatabaseName;
+            QuestionDlg msgDlg = new QuestionDlg();
+            msgDlg.Title = "Ausgewählte Datenbank löschen";
+            msgDlg.Description = $"Wollen Sie die ausgewählte Datenbank '{dbname}' entgültig löschen?\nDie Daten können nach dem löschen nicht mehr wiederhergestellt werden.";
+            msgDlg.DescFontWeight = FontWeights.Bold;
+            this.CurrentControl.Value = msgDlg;
+        }
 
-                if (await this.SearchDatabaseAsync() == false)
-                {
-                    this.SetCurrentDialog(SelectDialog.AddNewDatabase);
-                }
-                else
-                {
-                    this.SetCurrentDialog(SelectDialog.SelectDatabase);
-                }
-            }
-            */
+        private void InfoDatabase()
+        {
+            string dbname = this.CurrentSelectedDatabase.DatabaseName;
+            QuestionDlg msgDlg = new QuestionDlg();
+            msgDlg.Title = "Information zur ausgewählten Datenbank";
+            msgDlg.Description = $"Info.";
+            msgDlg.DescFontWeight = FontWeights.Bold;
+            msgDlg.ShowButtonNo = false;
+            msgDlg.ShowButtonYes = true;
+            this.CurrentControl.Value = msgDlg;
+        }
+
+        private void CreateNewDatabase()
+        {
+            this.SetCurrentDialog(SelectDialog.AddNewDatabase);
         }
 
         private void TxtCurrentPassword_PasswordChanged(object sender, RoutedEventArgs e)
@@ -259,50 +256,14 @@
 
         private void SetCurrentDialog(SelectDialog selectDlg)
         {
-            /*
             if (selectDlg == SelectDialog.AddNewDatabase)
             {
-                this.TxtDatabaseName.Text = string.Empty;
-                this.TxtCurrentPassword.Password = string.Empty;
-                this.TxtNewPassword.Password = string.Empty;
-                this.TxtDescription.Text = string.Empty;
-                this.ShowSearchWaiting.Value = Visibility.Collapsed;
-                this.ShowDatabase.Value = Visibility.Collapsed;
-                this.ShowNoDatabase.Value = Visibility.Visible;
-                this.BtnBack.Visibility = Visibility.Collapsed;
-                this.BtnDatabaseDelete.Visibility = Visibility.Collapsed;
-
-                this.BtnCreatePassword.IsEnabled = false;
-                this.BtnDatabaseAdd.IsEnabled = false;
-                this.BtnDatabaseDelete.IsEnabled = false;
-                this.BtnDatabaseStart.IsEnabled = false;
+                this.CurrentControl.Value = new AddNewDatabaseUC();
             }
             else if (selectDlg == SelectDialog.SelectDatabase)
             {
-                this.ShowSearchWaiting.Value = Visibility.Collapsed;
-                this.ShowDatabase.Value = Visibility.Visible;
-                this.ShowNoDatabase.Value = Visibility.Collapsed;
-                this.BtnBack.Visibility = Visibility.Visible;
-                this.BtnDatabaseDelete.Visibility = Visibility.Visible;
-
-                this.BtnDatabaseDelete.IsEnabled = true;
-                this.BtnDatabaseStart.IsEnabled = true;
+                this.CurrentControl.Value = new FoundDatabaseUC();
             }
-            else if (selectDlg == SelectDialog.Waiting)
-            {
-                this.ShowNoDatabase.Value = Visibility.Collapsed;
-                this.ShowDatabase.Value = Visibility.Collapsed;
-                this.ShowSearchWaiting.Value = Visibility.Visible;
-                this.BtnDatabaseStart.IsEnabled = false;
-            }
-            else if (selectDlg == SelectDialog.QuestionDlg)
-            {
-                this.ShowNoDatabase.Value = Visibility.Collapsed;
-                this.ShowDatabase.Value = Visibility.Collapsed;
-                this.ShowSearchWaiting.Value = Visibility.Collapsed;
-                this.ShowQuestionYesNo.Value = Visibility.Visible;
-            }
-            */
         }
     }
 }

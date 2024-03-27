@@ -100,40 +100,31 @@
 
                 <Button
                     x:Name="BtnApplicationExit"
-                    Grid.Row="5"
                     Width="50"
                     Margin="5,0"
                     HorizontalAlignment="Right"
-                    Click="BtnApplicationExit_Click"
                     Content="{StaticResource ResourceKey=ButtonApplicationExitImage}"
-                    Style="{StaticResource ResourceKey=FlatButton}" />
+                    Style="{StaticResource ResourceKey=FlatButton}"
+                    ToolTip="Programm beenden" />
 
                 <Button
                     x:Name="BtnDatabaseStart"
-                    Grid.Row="5"
                     Width="50"
                     Margin="5,0"
                     HorizontalAlignment="Right"
                     Content="{StaticResource ResourceKey=ButtonDatabaseStartImage}"
-                    Style="{StaticResource ResourceKey=FlatButton}" />
+                    Style="{StaticResource ResourceKey=FlatButton}"
+                    ToolTip="Ausgewählte Datenbank aufrufen" />
 
                 <Button
-                    x:Name="BtnDatabaseDelete"
-                    Grid.Row="5"
+                    x:Name="BtnPasswordChange"
                     Width="50"
                     Margin="5,0"
                     HorizontalAlignment="Right"
-                    Content="{StaticResource ResourceKey=ButtonIsNoImage}"
-                    Style="{StaticResource ResourceKey=FlatButton}" />
+                    Content="{StaticResource ResourceKey=ButtonPasswordChange}"
+                    Style="{StaticResource ResourceKey=FlatButton}"
+                    ToolTip="Aktuelles Passwort ändern" />
 
-                <Button
-                    x:Name="BtnDatabaseAdd"
-                    Grid.Row="5"
-                    Width="50"
-                    Margin="5,0"
-                    HorizontalAlignment="Right"
-                    Content="{StaticResource ResourceKey=ButtonDatabaseAddImage}"
-                    Style="{StaticResource ResourceKey=FlatButton}" />
             </StackPanel>
         </Grid>
     </GroupBox>

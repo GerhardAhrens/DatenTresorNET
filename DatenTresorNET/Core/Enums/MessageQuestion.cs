@@ -1,12 +1,12 @@
 /*
- * <copyright file="ToolbarButtons.cs" company="Lifeprojects.de">
- *     Class: ToolbarButtons
+ * <copyright file="MessageQuestion.cs" company="Lifeprojects.de">
+ *     Class: MessageQuestion
  *     Copyright © Lifeprojects.de 2024
  * </copyright>
  *
  * <author>Gerhard Ahrens - Lifeprojects.de</author>
  * <email>gerhard.ahrens@lifeprojects.de</email>
- * <date>26.04.2024</date>
+ * <date>27.04.2024</date>
  * <Project>EasyPrototypingNET</Project>
  *
  * <summary>
@@ -26,14 +26,12 @@ namespace DatenTresorNET.Core
 {
     using System;
 
-    public enum ToolbarButtons : int
+    public enum MessageQuestion : int
     {
         None = 0,
-        ApplicationExit = 1,
-        AddDatabase = 2,
-        DeleteDatabase = 3,
-        StartDatabase = 4,
-        InfoDatabase = 5,
-        AddFunctions = 6
+        Yes = 1,
+        No = 2,
+        Cancel = 3,
+        Ok = 4,
     }
 }

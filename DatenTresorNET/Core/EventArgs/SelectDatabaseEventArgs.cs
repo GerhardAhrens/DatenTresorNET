@@ -23,12 +23,10 @@ namespace DatenTresorNET.Core
     /// Argument beim Wechslem zwischen den UserControl-Dialogen
     /// </summary>
     /// <typeparam name="IViewModel"></typeparam>
-    public class MessageEventArgs : EventArgs, IPayload
+    public class SelectDatabaseEventArgs : EventArgs, IPayload
     {
         public Type Sender { get; set; }
 
-        public MessageQuestion MsgQuestion { get; set; }
-
-        public DatabaseParameter CurrentDatabase { get; set; }
+        public DatabaseParameter SelectDatabase { get; set; }
     }
 }

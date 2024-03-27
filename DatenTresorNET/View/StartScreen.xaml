@@ -32,7 +32,7 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="70" />
-                <RowDefinition Height="60" />
+                <RowDefinition Height="70" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="40" />
             </Grid.RowDefinitions>
@@ -108,6 +108,7 @@
             <StackPanel
                 Grid.Row="1"
                 Grid.Column="0"
+                Margin="0,0,0,10"
                 Orientation="Horizontal">
                 <Button
                     x:Name="BtnApplicationExit"
@@ -116,7 +117,8 @@
                     VerticalAlignment="Bottom"
                     Content="{StaticResource ResourceKey=ButtonApplicationExitImage}"
                     Style="{StaticResource ResourceKey=FlatButtonStyle}"
-                    Tag="{x:Static localStatic:ToolbarButtons.ApplicationExit}" />
+                    Tag="{x:Static localStatic:ToolbarButtons.ApplicationExit}"
+                    ToolTip="Programm beenden" />
 
                 <Button
                     x:Name="BtnAddDatabase"
@@ -125,7 +127,9 @@
                     HorizontalAlignment="Left"
                     VerticalAlignment="Bottom"
                     Content="{StaticResource ResourceKey=ButtonDatabaseAddImage}"
-                    Style="{StaticResource ResourceKey=FlatButton}" />
+                    Style="{StaticResource ResourceKey=FlatButton}"
+                    Tag="{x:Static localStatic:ToolbarButtons.AddDatabase}"
+                    ToolTip="Neue datenbank hinzufügen" />
 
                 <Button
                     x:Name="BtnDatabaseDelete"
@@ -134,7 +138,9 @@
                     HorizontalAlignment="Left"
                     VerticalAlignment="Bottom"
                     Content="{StaticResource ResourceKey=ButtonIsNoImage}"
-                    Style="{StaticResource ResourceKey=FlatButton}" />
+                    Style="{StaticResource ResourceKey=FlatButton}"
+                    Tag="{x:Static localStatic:ToolbarButtons.DeleteDatabase}"
+                    ToolTip="ausgewählte Datenbank löschen" />
 
                 <Button
                     x:Name="BtnDatabaseStart"
@@ -144,7 +150,9 @@
                     HorizontalAlignment="Left"
                     VerticalAlignment="Bottom"
                     Content="{StaticResource ResourceKey=ButtonDatabaseStartImage}"
-                    Style="{StaticResource ResourceKey=FlatButton}" />
+                    Style="{StaticResource ResourceKey=FlatButton}"
+                    Tag="{x:Static localStatic:ToolbarButtons.StartDatabase}"
+                    ToolTip="Ausgewählte Datenbank aufrufen" />
 
                 <Button
                     x:Name="BtnInfo"
@@ -154,7 +162,21 @@
                     HorizontalAlignment="Left"
                     VerticalAlignment="Bottom"
                     Content="{StaticResource ResourceKey=ButtonInfo}"
-                    Style="{StaticResource ResourceKey=FlatButton}" />
+                    Style="{StaticResource ResourceKey=FlatButton}"
+                    Tag="{x:Static localStatic:ToolbarButtons.InfoDatabase}"
+                    ToolTip="Informationen zur ausgewählten Datenbank anzeigen" />
+
+                <Button
+                    x:Name="BtnAddFunctions"
+                    Grid.Row="5"
+                    Width="50"
+                    Margin="5,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom"
+                    Content="{StaticResource ResourceKey=Button3Dots}"
+                    Style="{StaticResource ResourceKey=FlatButton}"
+                    Tag="{x:Static localStatic:ToolbarButtons.AddFunctions}"
+                    ToolTip="Weitere Funktionen anzeigen" />
             </StackPanel>
 
             <ContentControl

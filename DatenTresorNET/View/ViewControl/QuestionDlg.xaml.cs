@@ -3,15 +3,15 @@
     using System;
     using System.Windows;
     using System.Windows.Controls;
+    using DatenTresorNET.Core;
+
+    using DatenTresorNET.View.ViewControl;
 
     /// <summary>
     /// Interaktionslogik für QuestionDlg.xaml
     /// </summary>
     public partial class QuestionDlg : UserControl
     {
-        public static readonly DependencyProperty IsOkProperty =
-            DependencyProperty.Register("IsOk", typeof(bool), typeof(QuestionDlg), new PropertyMetadata(false));
-
         public static readonly DependencyProperty TitleProperty =
             DependencyProperty.Register("Title", typeof(string), typeof(QuestionDlg), new PropertyMetadata(string.Empty, OnTitleChanged));
 
@@ -21,16 +21,17 @@
         public static readonly DependencyProperty DescriptionProperty =
             DependencyProperty.Register("Description", typeof(string), typeof(QuestionDlg), new PropertyMetadata(string.Empty, OnDescriptionChanged));
 
+        public static readonly DependencyProperty ShowButtonYesProperty =
+            DependencyProperty.Register("ShowButtonYes", typeof(bool), typeof(QuestionDlg), new PropertyMetadata(true, OnShowButtonYesChanged));
+
+        public static readonly DependencyProperty ShowButtonNoProperty =
+            DependencyProperty.Register("ShowButtonNo", typeof(bool), typeof(QuestionDlg), new PropertyMetadata(true, OnShowButtonNoChanged));
+
         public QuestionDlg()
         {
             this.InitializeComponent();
             WeakEventManager<Button, RoutedEventArgs>.AddHandler(this.BtnYes, "Click", this.OnButtonClickYes);
-        }
-
-        public bool IsOk
-        {
-            get { return (bool)GetValue(IsOkProperty); }
-            set { SetValue(IsOkProperty, value); }
+            WeakEventManager<Button, RoutedEventArgs>.AddHandler(this.BtnNo, "Click", this.OnButtonClickNo);
         }
 
         public string Title
@@ -49,6 +50,18 @@
         {
             get { return (string)GetValue(DescriptionProperty); }
             set { SetValue(DescriptionProperty, value); }
+        }
+
+        public bool ShowButtonYes
+        {
+            get { return (bool)GetValue(ShowButtonYesProperty); }
+            set { SetValue(ShowButtonYesProperty, value); }
+        }
+
+        public bool ShowButtonNo
+        {
+            get { return (bool)GetValue(ShowButtonNoProperty); }
+            set { SetValue(ShowButtonNoProperty, value); }
         }
 
         private static void OnTitleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -102,9 +115,69 @@
             }
         }
 
+        private static void OnShowButtonYesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is QuestionDlg control)
+            {
+                try
+                {
+                    if (e.NewValue != null)
+                    {
+                        if ((bool)e.NewValue == true)
+                        {
+                            control.BtnYes.Visibility = Visibility.Visible;
+                        }
+                        else
+                        {
+                            control.BtnYes.Visibility = Visibility.Collapsed;
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
+
+        private static void OnShowButtonNoChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is QuestionDlg control)
+            {
+                try
+                {
+                    if (e.NewValue != null)
+                    {
+                        if ((bool)e.NewValue == true)
+                        {
+                            control.BtnNo.Visibility = Visibility.Visible;
+                        }
+                        else
+                        {
+                            control.BtnNo.Visibility = Visibility.Collapsed;
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
+
         private void OnButtonClickYes(object sender, RoutedEventArgs e)
         {
-            this.IsOk = true;
+            if (this.BtnNo.Visibility == Visibility.Collapsed)
+            {
+                App.EventAgg.Publish<MessageEventArgs>(new MessageEventArgs { Sender = typeof(FoundDatabaseUC), MsgQuestion = MessageQuestion.Ok });
+            }
+            else
+            {
+                App.EventAgg.Publish<MessageEventArgs>(new MessageEventArgs { Sender = typeof(FoundDatabaseUC), MsgQuestion = MessageQuestion.Yes });
+            }
+        }
+
+        private void OnButtonClickNo(object sender, RoutedEventArgs e)
+        {
+            App.EventAgg.Publish<MessageEventArgs>(new MessageEventArgs { Sender = typeof(FoundDatabaseUC), MsgQuestion = MessageQuestion.No });
         }
     }
 }

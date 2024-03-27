@@ -56,7 +56,7 @@ namespace DatenTresorNET.Core
             });
         }
 
-        private bool SearchDatabase()
+        public bool SearchDatabase()
         {
             bool result = false;
 
@@ -127,27 +127,32 @@ namespace DatenTresorNET.Core
 
                             settings.Save();
                         }
+                    }
+
+                    foreach (DatabaseParameter item in this.DatabaseNamesSource)
+                    {
+                        if (settings.Databases.Count() == 1)
+                        {
+                            item.Default = true;
+                            break;
+                        }
                         else
                         {
-                            foreach (DatabaseParameter item in this.DatabaseNamesSource)
+                            if (item.DatabaseName == settings.Databases.FirstOrDefault(f => f.Default == true).DatabaseName)
                             {
-                                if (settings.Databases.Count() == 1)
-                                {
-                                    item.Default = true;
-                                    break;
-                                }
-                                else
-                                {
-                                    if (item.DatabaseName == settings.Databases.FirstOrDefault(f => f.Default == true).DatabaseName)
-                                    {
-                                        item.Default = true;
-                                    }
-                                }
+                                item.Default = true;
                             }
-
-                            this.DatabaseNamesSource = this.DatabaseNamesSource.OrderBy(x => x.Default).ToList();
-                            this.DatabaseNameSelected = this.DatabaseNamesSource.FirstOrDefault(f => f.Default == true);
                         }
+                    }
+
+                    this.DatabaseNamesSource = this.DatabaseNamesSource.OrderBy(x => x.Default).ToList();
+                    if (this.DatabaseNamesSource.FirstOrDefault(f => f.Default == true) != null)
+                    {
+                        this.DatabaseNameSelected = this.DatabaseNamesSource.FirstOrDefault(f => f.Default == true);
+                    }
+                    else
+                    {
+                        this.DatabaseNameSelected = this.DatabaseNamesSource.FirstOrDefault();
                     }
                 }
 
