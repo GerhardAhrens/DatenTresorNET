@@ -58,7 +58,7 @@
                 {
                     if (await ds.SearchDatabaseAsync() == false)
                     {
-                        this.CurrentControl.Value = new NoFoundDatabaseUC();
+                        this.CurrentControl.Value = new AddNewDatabaseUC();
                         if (await ds.SearchDatabaseAsync() == true)
                         {
 
