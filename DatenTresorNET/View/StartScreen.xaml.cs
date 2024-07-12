@@ -203,14 +203,17 @@
 
         private void InfoDatabase()
         {
-            string dbname = this.CurrentSelectedDatabase.DatabaseName;
-            QuestionDlg msgDlg = new QuestionDlg();
-            msgDlg.Title = "Information zur ausgewählten Datenbank";
-            msgDlg.Description = $"Info.";
-            msgDlg.DescFontWeight = FontWeights.Bold;
-            msgDlg.ShowButtonNo = false;
-            msgDlg.ShowButtonYes = true;
-            this.CurrentControl.Value = msgDlg;
+            if (this.CurrentSelectedDatabase != null)
+            {
+                string dbname = this.CurrentSelectedDatabase.DatabaseName;
+                QuestionDlg msgDlg = new QuestionDlg();
+                msgDlg.Title = "Information zur ausgewählten Datenbank";
+                msgDlg.Description = $"Info.";
+                msgDlg.DescFontWeight = FontWeights.Bold;
+                msgDlg.ShowButtonNo = false;
+                msgDlg.ShowButtonYes = true;
+                this.CurrentControl.Value = msgDlg;
+            }
         }
 
         private void CreateNewDatabase()

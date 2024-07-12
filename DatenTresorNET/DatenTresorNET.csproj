@@ -23,6 +23,7 @@
     <Folder Include="DataRepository\Base\" />
     <Folder Include="Extension\" />
     <Folder Include="Resources\XamlIcon\" />
+    <Folder Include="View\NotificationContent\" />
   </ItemGroup>
 
   <ItemGroup>
