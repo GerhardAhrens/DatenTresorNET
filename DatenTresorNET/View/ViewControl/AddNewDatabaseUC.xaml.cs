@@ -20,6 +20,33 @@
             WeakEventManager<UserControl, RoutedEventArgs>.AddHandler(this, "Loaded", this.OnLoaded);
             WeakEventManager<Button, RoutedEventArgs>.AddHandler(this.BtnYes, "Click", this.OnButtonClickYes);
             WeakEventManager<Button, RoutedEventArgs>.AddHandler(this.BtnNo, "Click", this.OnButtonClickNo);
+            WeakEventManager<TextBox, RoutedEventArgs>.AddHandler(this.TxtDatabaseName, "TextChanged", this.OnTextChanged);
+            WeakEventManager<TextBox, RoutedEventArgs>.AddHandler(this.TxtDatabaseName, "Loaded", this.OnTextChanged);
+            WeakEventManager<PasswordBox, RoutedEventArgs>.AddHandler(this.TxtPassword, "PasswordChanged", this.OnTextChanged);
+            WeakEventManager<PasswordBox, RoutedEventArgs>.AddHandler(this.TxtPassword, "Loaded", this.OnTextChanged);
+            WeakEventManager<PasswordBox, RoutedEventArgs>.AddHandler(this.TxtPasswordRepeat, "PasswordChanged", this.OnTextChanged);
+            WeakEventManager<PasswordBox, RoutedEventArgs>.AddHandler(this.TxtPasswordRepeat, "Loaded", this.OnTextChanged);
+        }
+
+        private void OnTextChanged(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(this.TxtDatabaseName.Text) == true 
+                || string.IsNullOrEmpty(this.TxtPassword.Password) == true 
+                || string.IsNullOrEmpty(this.TxtPasswordRepeat.Password) == true)
+            {
+                this.BtnYes.IsEnabled = false;
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(this.TxtDatabaseName.Text) == false && this.TxtPassword.Password == this.TxtPasswordRepeat.Password)
+                {
+                    this.BtnYes.IsEnabled = true;
+                }
+                else
+                {
+                    this.BtnYes.IsEnabled = false;
+                }
+            }
         }
 
         private string DatabaseLocation { get; set; }

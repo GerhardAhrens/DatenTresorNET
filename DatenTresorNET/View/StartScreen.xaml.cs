@@ -1,14 +1,11 @@
 ﻿namespace DatenTresorNET.View
 {
-    using System;
-    using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
-    using System.Xml.Linq;
 
     using DatenTresorNET.BaseFunction;
+    using DatenTresorNET.Controls;
     using DatenTresorNET.Core;
     using DatenTresorNET.View.ViewControl;
 
@@ -19,6 +16,8 @@
     /// </summary>
     public partial class StartScreen : Window
     {
+        private INotificationService _notificationService = new NotificationService();
+
         public StartScreen()
         {
             this.InitializeComponent();
@@ -31,6 +30,8 @@
 
             App.EventAgg.Subscribe<SelectDatabaseEventArgs>(this.SetDatabase);
             App.EventAgg.Subscribe<MessageEventArgs>(this.SetMessageQuestion);
+
+            NotificationService.RegisterDialog<MessageOK>();
 
             this.DataContext = this;
         }
@@ -58,10 +59,17 @@
                 {
                     if (await ds.SearchDatabaseAsync() == false)
                     {
+                        this.BtnAddDatabase.IsEnabled = false;
+                        this.BtnInfo.IsEnabled = false;
+                        this.BtnDatabaseDelete.IsEnabled = false;
+                        this.BtnDatabaseStart.IsEnabled = false;
                         this.CurrentControl.Value = new AddNewDatabaseUC();
                         if (await ds.SearchDatabaseAsync() == true)
                         {
-
+                            this.BtnAddDatabase.IsEnabled = true;
+                            this.BtnInfo.IsEnabled = true;
+                            this.BtnDatabaseDelete.IsEnabled = true;
+                            this.BtnDatabaseStart.IsEnabled = true;
                         }
                     }
                     else
@@ -193,12 +201,15 @@
 
         private void DeleteDatabase()
         {
-            string dbname = this.CurrentSelectedDatabase.DatabaseName;
-            QuestionDlg msgDlg = new QuestionDlg();
-            msgDlg.Title = "Ausgewählte Datenbank löschen";
-            msgDlg.Description = $"Wollen Sie die ausgewählte Datenbank '{dbname}' entgültig löschen?\nDie Daten können nach dem löschen nicht mehr wiederhergestellt werden.";
-            msgDlg.DescFontWeight = FontWeights.Bold;
-            this.CurrentControl.Value = msgDlg;
+            if (this.CurrentSelectedDatabase != null)
+            {
+                string dbname = this.CurrentSelectedDatabase.DatabaseName;
+                QuestionDlg msgDlg = new QuestionDlg();
+                msgDlg.Title = "Ausgewählte Datenbank löschen";
+                msgDlg.Description = $"Wollen Sie die ausgewählte Datenbank '{dbname}' entgültig löschen?\nDie Daten können nach dem löschen nicht mehr wiederhergestellt werden.";
+                msgDlg.DescFontWeight = FontWeights.Bold;
+                this.CurrentControl.Value = msgDlg;
+            }
         }
 
         private void InfoDatabase()
@@ -213,6 +224,10 @@
                 msgDlg.ShowButtonNo = false;
                 msgDlg.ShowButtonYes = true;
                 this.CurrentControl.Value = msgDlg;
+            }
+            else
+            {
+                _ = this._notificationService.HinweisOk();
             }
         }
 

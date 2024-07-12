@@ -26,6 +26,7 @@ namespace DatenTresorNET.Core
 {
     using System;
 
+    using DatenTresorNET.BaseFunction;
     using DatenTresorNET.Controls;
 
     public static class AppMsgDialog
@@ -34,7 +35,7 @@ namespace DatenTresorNET.Core
         {
             bool? resultDialog = null;
 
-            Tuple<string, string, double> msgText = new Tuple<string, string, double>("Eingabefehler", $"Eingabe korrigieren", 18);
+            Tuple<string, string, double> msgText = new Tuple<string, string, double>("Datenbankinformation", $"Eingabe korrigieren", 18);
             Tuple<NotificationBoxButton, object> resultTag = new Tuple<NotificationBoxButton, object>(NotificationBoxButton.None, null);
 
             @this.ShowDialog<MessageOK>(msgText, (result, tag) =>

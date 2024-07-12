@@ -9,6 +9,8 @@
 
             <ResourceDictionary.MergedDictionaries>
                 <!--  Alle Styles sammeln und mergen  -->
+                <ResourceDictionary Source="/View/ControlsUI/Themes/Generic.xaml" />
+
                 <!--  Lokale Styles  -->
                 <ResourceDictionary Source="Resources\XamlIcon\XamlIconViewBox.xaml" />
                 <ResourceDictionary Source="Resources\Style\Application.Core.Style.xaml" />
