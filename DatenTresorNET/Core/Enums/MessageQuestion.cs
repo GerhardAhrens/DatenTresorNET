@@ -33,5 +33,6 @@ namespace DatenTresorNET.Core
         No = 2,
         Cancel = 3,
         Ok = 4,
+        Delete = 5,
     }
 }

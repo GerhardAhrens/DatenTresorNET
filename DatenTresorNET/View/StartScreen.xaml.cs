@@ -80,46 +80,6 @@
             }
         }
 
-        /*
-        private async void BtnDatabaseAdd_Click(object sender, RoutedEventArgs e)
-        {
-            string dataBase = this.TxtDatabaseName.Text;
-            string password = this.TxtNewPassword.Password;
-            string fullName = System.IO.Path.Combine(this.DatabaseLocation, $"{dataBase}.db");
-
-            this.BtnDatabaseAdd.IsEnabled = false;
-
-            ConnectionString dbconn = this.Connection(fullName, string.Empty);
-            LiteDatabase litedb = new LiteDatabase(dbconn);
-            litedb.UserVersion = 3;
-            if (litedb != null)
-            {
-                DatabaseInformation di = new DatabaseInformation();
-                di.Id = Guid.NewGuid();
-                di.Name = dataBase;
-                di.Password = password;
-                di.Description = this.TxtDescription.Text;
-                di.CreatedBy = UserInfo.TS().CurrentUser;
-                di.CreatedOn = UserInfo.TS().CurrentTime;
-                ILiteCollection<DatabaseInformation> collection = litedb.GetCollection<DatabaseInformation>(typeof(DatabaseInformation).Name);
-                collection.Insert(di);
-                litedb.Commit();
-
-                if (string.IsNullOrEmpty(this.DatabaseLocation) == false)
-                {
-                    if (await this.SearchDatabaseAsync() == false)
-                    {
-                        this.SetCurrentDialog(SelectDialog.AddNewDatabase);
-                    }
-                    else
-                    {
-                        this.SetCurrentDialog(SelectDialog.SelectDatabase);
-                    }
-                }
-            }
-        }
-        */
-
         private void OnButtonClick(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
@@ -176,6 +136,16 @@
             }
             else if (args.Sender == typeof(QuestionDlg) && args.MsgQuestion == MessageQuestion.Ok)
             {
+                this.SetCurrentDialog(SelectDialog.SelectDatabase);
+            }
+            else if (args.Sender == typeof(FoundDatabaseUC) && args.MsgQuestion == MessageQuestion.Delete)
+            {
+                string deleteDB = Path.Combine(this.CurrentSelectedDatabase.DatabaseFolder, this.CurrentSelectedDatabase.DatabaseName);
+                if (File.Exists(deleteDB) == true)
+                {
+                    File.Delete(deleteDB);
+                }
+
                 this.SetCurrentDialog(SelectDialog.SelectDatabase);
             }
             if (args.Sender == typeof(AddNewDatabaseUC) && args.MsgQuestion == MessageQuestion.Yes)

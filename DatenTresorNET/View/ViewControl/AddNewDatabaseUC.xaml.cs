@@ -68,6 +68,7 @@
 
         private void OnButtonClickYes(object sender, RoutedEventArgs e)
         {
+            this.CreateNewDatabase();
             MessageEventArgs args = new MessageEventArgs();
             args.Sender = typeof(AddNewDatabaseUC);
             args.MsgQuestion = MessageQuestion.Yes;

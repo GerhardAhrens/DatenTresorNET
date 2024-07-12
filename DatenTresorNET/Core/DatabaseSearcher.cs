@@ -110,9 +110,14 @@ namespace DatenTresorNET.Core
                         settings.Load();
                     }
 
-                    if (settings.Databases.Count() != dbs.Count())
+                    if (settings.Databases?.Count() != dbs.Count())
                     {
-                        settings.Databases.Clear();
+                        if (settings.Databases == null)
+                        {
+                            settings.Databases = new List<DatabaseParameter>();
+                        }
+
+                        settings.Databases?.Clear();
                         if (this.DatabaseNamesSource != null)
                         {
                             foreach (DatabaseParameter item in this.DatabaseNamesSource)

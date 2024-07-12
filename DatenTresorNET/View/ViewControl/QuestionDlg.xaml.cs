@@ -171,7 +171,7 @@
             }
             else
             {
-                App.EventAgg.Publish<MessageEventArgs>(new MessageEventArgs { Sender = typeof(FoundDatabaseUC), MsgQuestion = MessageQuestion.Yes });
+                App.EventAgg.Publish<MessageEventArgs>(new MessageEventArgs { Sender = typeof(FoundDatabaseUC), MsgQuestion = MessageQuestion.Delete });
             }
         }
 
