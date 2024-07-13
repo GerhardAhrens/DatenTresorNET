@@ -107,7 +107,7 @@
             ConnectionString dbconn = null;
             using (DBConnectionBuilder builder = new DBConnectionBuilder())
             {
-                dbconn = builder.GetConnection(fullName, string.Empty);
+                dbconn = builder.GetConnection(fullName, password);
             }
 
             LiteDatabase litedb = new LiteDatabase(dbconn);

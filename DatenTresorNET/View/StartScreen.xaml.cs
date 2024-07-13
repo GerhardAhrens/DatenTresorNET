@@ -27,6 +27,7 @@
             WeakEventManager<Button, RoutedEventArgs>.AddHandler(this.BtnAddDatabase, "Click", this.OnButtonClick);
             WeakEventManager<Button, RoutedEventArgs>.AddHandler(this.BtnDatabaseDelete, "Click", this.OnButtonClick);
             WeakEventManager<Button, RoutedEventArgs>.AddHandler(this.BtnInfo, "Click", this.OnButtonClick);
+            WeakEventManager<Button, RoutedEventArgs>.AddHandler(this.BtnDatabaseStart, "Click", this.OnButtonClick);
 
             App.EventAgg.Subscribe<SelectDatabaseEventArgs>(this.SetDatabase);
             App.EventAgg.Subscribe<MessageEventArgs>(this.SetMessageQuestion);
@@ -55,7 +56,7 @@
 
             if (string.IsNullOrEmpty(this.DatabaseLocation) == false)
             {
-                using (DatabaseSearcher ds = new DatabaseSearcher(this.DatabaseLocation))
+                using (DatabaseSearcher ds = new DatabaseSearcher(this.DatabaseLocation, null))
                 {
                     if (await ds.SearchDatabaseAsync() == false)
                     {
@@ -101,6 +102,10 @@
             {
                 this.InfoDatabase();
             }
+            else if (tagEnum == ToolbarButtons.StartDatabase)
+            {
+                this.DatabaseStart();
+            }
         }
 
         private void SetDatabase(SelectDatabaseEventArgs args)
@@ -108,27 +113,10 @@
             this.CurrentSelectedDatabase = args.SelectDatabase;
         }
 
-        private async void SetMessageQuestion(MessageEventArgs args)
+        private void SetMessageQuestion(MessageEventArgs args)
         {
             if (args.Sender == typeof(QuestionDlg) && args.MsgQuestion == MessageQuestion.Yes)
             {
-                string fullname = Path.Combine(this.CurrentSelectedDatabase.DatabaseFolder, this.CurrentSelectedDatabase.DatabaseName);
-                if (File.Exists(fullname) == true)
-                {
-                    //File.Delete(fullname);
-
-                    using (DatabaseSearcher ds = new DatabaseSearcher(this.DatabaseLocation))
-                    {
-                        if (await ds.SearchDatabaseAsync() == false)
-                        {
-                            this.SetCurrentDialog(SelectDialog.AddNewDatabase);
-                        }
-                        else
-                        {
-                            this.SetCurrentDialog(SelectDialog.SelectDatabase);
-                        }
-                    }
-                }
             }
             else if (args.Sender == typeof(QuestionDlg) && args.MsgQuestion == MessageQuestion.No)
             {
@@ -147,7 +135,6 @@
                 }
 
                 this.CheckOfDatebase();
-
                 this.SetCurrentDialog(SelectDialog.SelectDatabase);
             }
             if (args.Sender == typeof(AddNewDatabaseUC) && args.MsgQuestion == MessageQuestion.Add)
@@ -160,18 +147,6 @@
                 this.CheckOfDatebase();
                 this.SetCurrentDialog(SelectDialog.SelectDatabase);
             }
-        }
-
-        private ConnectionString Connection(string databaseFile, string password)
-        {
-            ConnectionString conn = new ConnectionString(databaseFile);
-            conn.Connection = ConnectionType.Shared;
-            if (string.IsNullOrEmpty(password) == false)
-            {
-                conn.Password = password;
-            }
-
-            return conn;
         }
 
         private void DeleteDatabase()
@@ -211,42 +186,6 @@
             this.SetCurrentDialog(SelectDialog.AddNewDatabase);
         }
 
-        private void TxtCurrentPassword_PasswordChanged(object sender, RoutedEventArgs e)
-        {
-            if (this.DataContext != null && sender is PasswordBox passwordBox)
-            {
-                ((dynamic)this.DataContext).CurrentPassword = passwordBox.Password;
-                if (passwordBox.Password.Length > 0)
-                {
-                    //this.BtnCreatePassword.IsEnabled = true;
-                }
-                else
-                {
-                    //this.BtnCreatePassword.IsEnabled = false;
-                }
-            }
-        }
-
-        private void DatabaseName_TextChanged(object sender, RoutedEventArgs e)
-        {
-            if (sender is TextBox textBox)
-            { 
-                if (textBox.Text.Length > 0)
-                {
-                    //this.BtnDatabaseAdd.IsEnabled = true;
-                }
-                else
-                {
-                    //this.BtnDatabaseAdd.IsEnabled = false;
-                }
-            }
-        }
-
-        private void BtnCreatePassword_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void SetCurrentDialog(SelectDialog selectDlg)
         {
             if (selectDlg == SelectDialog.AddNewDatabase)
@@ -263,7 +202,7 @@
         {
             if (string.IsNullOrEmpty(this.DatabaseLocation) == false)
             {
-                using (DatabaseSearcher ds = new DatabaseSearcher(this.DatabaseLocation))
+                using (DatabaseSearcher ds = new DatabaseSearcher(this.DatabaseLocation,null))
                 {
                     if (await ds.SearchDatabaseAsync() == false)
                     {
@@ -287,6 +226,37 @@
                         this.BtnDatabaseDelete.IsEnabled = true;
                         this.BtnDatabaseStart.IsEnabled = true;
                         this.SetCurrentDialog(SelectDialog.SelectDatabase);
+                    }
+                }
+            }
+        }
+
+        private void DatabaseStart()
+        {
+            Window window = Application.Current.Windows.Cast<Window>().Single(s => s.GetType() == typeof(StartScreen));
+            if (window.IsActive == true)
+            {
+                window.DialogResult = true;
+                window.Close();
+
+                using (ApplicationSettings settings = new ApplicationSettings())
+                {
+                    if (settings.IsExitSettings() == true)
+                    {
+                        settings.Load();
+                    }
+
+                    if (settings.Databases?.Any() == true)
+                    {
+                        foreach (DatabaseParameter dbParam in settings.Databases)
+                        {
+                            dbParam.Default = false;
+                        }
+
+                        string selectedName = this.CurrentSelectedDatabase.DatabaseName;
+                        DatabaseParameter dp = settings.Databases.First(f => f.DatabaseName.ToLower() == selectedName.ToLower());
+                        dp.Default = true;
+                        settings.Save();
                     }
                 }
             }

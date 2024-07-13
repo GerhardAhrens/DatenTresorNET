@@ -32,9 +32,10 @@ namespace DatenTresorNET.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="DatabaseSearcher"/> class.
         /// </summary>
-        public DatabaseSearcher(string databaseLocation)
+        public DatabaseSearcher(string databaseLocation, string password)
         {
             this.DatabaseLocation = databaseLocation;
+            this.Passwort = password;
         }
 
          ~DatabaseSearcher()
@@ -47,6 +48,8 @@ namespace DatenTresorNET.Core
         public DatabaseParameter DatabaseNameSelected { get; private set; }
 
         private string DatabaseLocation { get; set; }
+
+        public string Passwort { get; private set; }
 
         public async Task<bool> SearchDatabaseAsync()
         {
@@ -78,7 +81,7 @@ namespace DatenTresorNET.Core
                     ConnectionString dbconn = null;
                     using (DBConnectionBuilder builder = new DBConnectionBuilder())
                     {
-                        dbconn = builder.GetConnection(db, null);
+                        dbconn = builder.GetConnection(db, this.Passwort);
                     }
 
                     LiteDatabase litedb = new LiteDatabase(dbconn);
@@ -98,6 +101,7 @@ namespace DatenTresorNET.Core
                     dbparam.DatabaseFolder = System.IO.Path.GetDirectoryName(db);
                     dbparam.DatabaseName = System.IO.Path.GetFileName(db);
                     dbparam.Description = dbinfo.Description;
+                    dbparam.PasswordHash = this.Passwort;
                     this.DatabaseNamesSource.Add(dbparam);
                     litedb.Dispose();
                     litedb = null;
@@ -163,18 +167,6 @@ namespace DatenTresorNET.Core
             }
 
             return result;
-        }
-
-        private ConnectionString Connection(string databaseFile, string password)
-        {
-            ConnectionString conn = new ConnectionString(databaseFile);
-            conn.Connection = ConnectionType.Shared;
-            if (string.IsNullOrEmpty(password) == false)
-            {
-                conn.Password = password;
-            }
-
-            return conn;
         }
 
         #region Dispose 

@@ -2,8 +2,10 @@
     x:Class="DatenTresorNET.View.ViewControl.FoundDatabaseUC"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:UI="clr-namespace:DatenTresorNET.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:DatenTresorNET.View.ViewControl"
+    xmlns:localStatic="clr-namespace:DatenTresorNET.Core"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -89,43 +91,65 @@
                 HorizontalAlignment="Left"
                 FontSize="14"
                 MaxLength="20"
-                PasswordChanged="TxtCurrentPassword_PasswordChanged"
                 PasswordChar="*" />
 
-            <StackPanel
+            <StatusBar
                 Grid.Row="5"
                 Grid.Column="1"
-                FlowDirection="RightToLeft"
-                Orientation="Horizontal">
+                Background="Transparent">
+                <StatusBarItem HorizontalAlignment="Right" DockPanel.Dock="Right">
+                    <UI:PathButton
+                        x:Name="BtnApplicationExit"
+                        Margin="10,0"
+                        VerticalAlignment="Bottom"
+                        Background="Transparent"
+                        CornerRadius="3"
+                        Foreground="Blue"
+                        IsEnabled="True"
+                        MouseOverBackground="LightGray"
+                        PathData="{StaticResource ResourceKey=AppExit}"
+                        PathWidth="36"
+                        PressedBackground="LightGray"
+                        Tag="{x:Static localStatic:ToolbarButtons.ApplicationExit}"
+                        ToolTip="Programm beenden" />
+                </StatusBarItem>
 
-                <Button
-                    x:Name="BtnApplicationExit"
-                    Width="50"
-                    Margin="5,0"
-                    HorizontalAlignment="Right"
-                    Content="{StaticResource ResourceKey=ButtonApplicationExitImage}"
-                    Style="{StaticResource ResourceKey=FlatButton}"
-                    ToolTip="Programm beenden" />
+                <StatusBarItem HorizontalAlignment="Right" DockPanel.Dock="Right">
+                    <UI:PathButton
+                        x:Name="BtnDatabaseStart"
+                        Margin="10,0"
+                        VerticalAlignment="Bottom"
+                        Background="Transparent"
+                        CornerRadius="3"
+                        DockPanel.Dock="Right"
+                        Foreground="Blue"
+                        IsEnabled="True"
+                        MouseOverBackground="LightGray"
+                        PathData="{StaticResource ResourceKey=StartDatabase1}"
+                        PathWidth="36"
+                        PressedBackground="LightGray"
+                        Tag="{x:Static localStatic:ToolbarButtons.StartDatabase}"
+                        ToolTip="Ausgewählte Datenbank aufrufen" />
+                </StatusBarItem>
 
-                <Button
-                    x:Name="BtnDatabaseStart"
-                    Width="50"
-                    Margin="5,0"
-                    HorizontalAlignment="Right"
-                    Content="{StaticResource ResourceKey=ButtonDatabaseStartImage}"
-                    Style="{StaticResource ResourceKey=FlatButton}"
-                    ToolTip="Ausgewählte Datenbank aufrufen" />
-
-                <Button
-                    x:Name="BtnPasswordChange"
-                    Width="50"
-                    Margin="5,0"
-                    HorizontalAlignment="Right"
-                    Content="{StaticResource ResourceKey=ButtonPasswordChange}"
-                    Style="{StaticResource ResourceKey=FlatButton}"
-                    ToolTip="Aktuelles Passwort ändern" />
-
-            </StackPanel>
+                <StatusBarItem HorizontalAlignment="Right" Background="Transparent">
+                    <UI:PathButton
+                        x:Name="BtnPasswordChange"
+                        Margin="10,0"
+                        VerticalAlignment="Bottom"
+                        Background="Transparent"
+                        CornerRadius="3"
+                        DockPanel.Dock="Right"
+                        Foreground="Blue"
+                        IsEnabled="True"
+                        MouseOverBackground="LightGray"
+                        PathData="{StaticResource ResourceKey=ButtonPasswordChange}"
+                        PathWidth="36"
+                        PressedBackground="LightGray"
+                        Tag="{x:Static localStatic:ToolbarButtons.ChangePassword}"
+                        ToolTip="Aktuelles Passwort ändern" />
+                </StatusBarItem>
+            </StatusBar>
         </Grid>
     </GroupBox>
 </UserControl>

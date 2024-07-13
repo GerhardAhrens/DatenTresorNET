@@ -2,11 +2,14 @@
 {
     using System;
     using System.CodeDom;
+    using System.IO;
     using System.Windows;
     using System.Windows.Controls;
 
     using DatenTresorNET.BaseFunction;
     using DatenTresorNET.Core;
+
+    using LiteDB;
 
     /// <summary>
     /// Interaktionslogik für FoundDatabaseUC.xaml
@@ -19,6 +22,7 @@
             WeakEventManager<UserControl, RoutedEventArgs>.AddHandler(this, "Loaded", this.OnLoaded);
             WeakEventManager<Button, RoutedEventArgs>.AddHandler(this.BtnApplicationExit, "Click", this.OnApplicationExit);
             WeakEventManager<Button, RoutedEventArgs>.AddHandler(this.BtnDatabaseStart, "Click", this.OnDatabaseStart);
+            WeakEventManager<Button, RoutedEventArgs>.AddHandler(this.BtnPasswordChange, "Click", this.OnChangePassword);
             WeakEventManager<ComboBox, SelectionChangedEventArgs>.AddHandler(this.cbDatabaseNamesSource, "SelectionChanged", this.OnSelectionChanged);
 
             this.DataContext = this;
@@ -41,7 +45,7 @@
                 }
             }
 
-            using (DatabaseSearcher ds = new DatabaseSearcher(this.DatabaseLocation))
+            using (DatabaseSearcher ds = new DatabaseSearcher(this.DatabaseLocation, this.TxtCurrentPassword.Password))
             {
                 if (await ds.SearchDatabaseAsync() == true)
                 {
@@ -57,22 +61,6 @@
             if (current != null)
             {
                 App.EventAgg.Publish<SelectDatabaseEventArgs>(new SelectDatabaseEventArgs { Sender = typeof(FoundDatabaseUC), SelectDatabase = current });
-            }
-        }
-
-        private void TxtCurrentPassword_PasswordChanged(object sender, RoutedEventArgs e)
-        {
-            if (this.DataContext != null && sender is PasswordBox passwordBox)
-            {
-                ((dynamic)this.DataContext).CurrentPassword = passwordBox.Password;
-                if (passwordBox.Password.Length > 0)
-                {
-                    //this.BtnCreatePassword.IsEnabled = true;
-                }
-                else
-                {
-                    //this.BtnCreatePassword.IsEnabled = false;
-                }
             }
         }
 
@@ -115,6 +103,35 @@
                     }
                 }
             }
+        }
+
+        private void OnChangePassword(object sender, RoutedEventArgs e)
+        {
+            string selectedName = Path.Combine(this.DatabaseNameSelected.Value.DatabaseFolder, this.DatabaseNameSelected.Value.DatabaseName);
+            if (File.Exists(selectedName) == true)
+            {
+                ConnectionString dbconn = Connection(selectedName, this.TxtCurrentPassword.Password);
+                if (dbconn != null)
+                {
+                    LiteDatabase litedb = new LiteDatabase(dbconn);
+                    if (litedb != null)
+                    {
+
+                    }
+                }
+            }
+        }
+
+        private ConnectionString Connection(string databaseFile, string password)
+        {
+            ConnectionString conn = new ConnectionString(databaseFile);
+            conn.Connection = ConnectionType.Shared;
+            if (string.IsNullOrEmpty(password) == false)
+            {
+                conn.Password = password;
+            }
+
+            return conn;
         }
     }
 }

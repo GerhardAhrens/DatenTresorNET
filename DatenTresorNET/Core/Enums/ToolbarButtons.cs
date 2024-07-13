@@ -34,6 +34,7 @@ namespace DatenTresorNET.Core
         DeleteDatabase = 3,
         StartDatabase = 4,
         InfoDatabase = 5,
-        AddFunctions = 6
+        AddFunctions = 6,
+        ChangePassword = 7,
     }
 }
