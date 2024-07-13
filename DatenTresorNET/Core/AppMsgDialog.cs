@@ -31,11 +31,11 @@ namespace DatenTresorNET.Core
 
     public static class AppMsgDialog
     {
-        public static NotificationBoxButton HinweisOk(this INotificationService @this)
+        public static NotificationBoxButton HinweisOk(this INotificationService @this,string msg)
         {
             bool? resultDialog = null;
 
-            Tuple<string, string, double> msgText = new Tuple<string, string, double>("Datenbankinformation", $"Eingabe korrigieren", 18);
+            Tuple<string, string, double> msgText = new Tuple<string, string, double>("Datenbankinformation", $"{msg}", 18);
             Tuple<NotificationBoxButton, object> resultTag = new Tuple<NotificationBoxButton, object>(NotificationBoxButton.None, null);
 
             @this.ShowDialog<MessageOK>(msgText, (result, tag) =>

@@ -141,13 +141,6 @@ namespace DatenTresorNET.Core
                             item.Default = true;
                             break;
                         }
-                        else
-                        {
-                            if (item.DatabaseName == settings.Databases.FirstOrDefault(f => f.Default == true).DatabaseName)
-                            {
-                                item.Default = true;
-                            }
-                        }
                     }
 
                     this.DatabaseNamesSource = this.DatabaseNamesSource.OrderBy(x => x.Default).ToList();

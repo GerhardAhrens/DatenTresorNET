@@ -2,6 +2,7 @@
 {
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Input;
 
     using DatenTresorNET.BaseFunction;
     using DatenTresorNET.Core;
@@ -22,6 +23,8 @@
             WeakEventManager<Button, RoutedEventArgs>.AddHandler(this.BtnNo, "Click", this.OnButtonClickNo);
             WeakEventManager<TextBox, RoutedEventArgs>.AddHandler(this.TxtDatabaseName, "TextChanged", this.OnTextChanged);
             WeakEventManager<TextBox, RoutedEventArgs>.AddHandler(this.TxtDatabaseName, "Loaded", this.OnTextChanged);
+            WeakEventManager<TextBox, KeyEventArgs>.AddHandler(this.TxtDatabaseName, "KeyDown", this.OnKeyDown);
+            WeakEventManager<TextBox, KeyEventArgs>.AddHandler(this.TxtDescription, "KeyDown", this.OnKeyDown);
             WeakEventManager<PasswordBox, RoutedEventArgs>.AddHandler(this.TxtPassword, "PasswordChanged", this.OnTextChanged);
             WeakEventManager<PasswordBox, RoutedEventArgs>.AddHandler(this.TxtPassword, "Loaded", this.OnTextChanged);
             WeakEventManager<PasswordBox, RoutedEventArgs>.AddHandler(this.TxtPasswordRepeat, "PasswordChanged", this.OnTextChanged);
@@ -49,6 +52,14 @@
             }
         }
 
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter & (sender as TextBox).AcceptsReturn == false)
+            {
+                this.MoveToNextUIElement(e);
+            }
+        }
+
         private string DatabaseLocation { get; set; }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
@@ -71,7 +82,7 @@
             this.CreateNewDatabase();
             MessageEventArgs args = new MessageEventArgs();
             args.Sender = typeof(AddNewDatabaseUC);
-            args.MsgQuestion = MessageQuestion.Yes;
+            args.MsgQuestion = MessageQuestion.Add;
             args.CurrentDatabase = null;
 
             App.EventAgg.Publish<MessageEventArgs>(args);
@@ -113,6 +124,23 @@
                 ILiteCollection<DatabaseInformation> collection = litedb.GetCollection<DatabaseInformation>(typeof(DatabaseInformation).Name);
                 collection.Insert(di);
                 litedb.Commit();
+            }
+        }
+
+        private void MoveToNextUIElement(KeyEventArgs e)
+        {
+            FocusNavigationDirection focusDirection = FocusNavigationDirection.Next;
+
+            TraversalRequest request = new TraversalRequest(focusDirection);
+
+            UIElement elementWithFocus = Keyboard.FocusedElement as UIElement;
+
+            if (elementWithFocus != null)
+            {
+                if (elementWithFocus.MoveFocus(request) == true)
+                {
+                    e.Handled = true;
+                }
             }
         }
     }

@@ -146,13 +146,18 @@
                     File.Delete(deleteDB);
                 }
 
+                this.CheckOfDatebase();
+
                 this.SetCurrentDialog(SelectDialog.SelectDatabase);
             }
-            if (args.Sender == typeof(AddNewDatabaseUC) && args.MsgQuestion == MessageQuestion.Yes)
+            if (args.Sender == typeof(AddNewDatabaseUC) && args.MsgQuestion == MessageQuestion.Add)
             {
+                this.CheckOfDatebase();
+                this.SetCurrentDialog(SelectDialog.SelectDatabase);
             }
             else
             {
+                this.CheckOfDatebase();
                 this.SetCurrentDialog(SelectDialog.SelectDatabase);
             }
         }
@@ -197,7 +202,7 @@
             }
             else
             {
-                _ = this._notificationService.HinweisOk();
+                _ = this._notificationService.HinweisOk("Es kann keine Datenbankinformationen angezeigt werden!");
             }
         }
 
@@ -251,6 +256,39 @@
             else if (selectDlg == SelectDialog.SelectDatabase)
             {
                 this.CurrentControl.Value = new FoundDatabaseUC();
+            }
+        }
+
+        private async void CheckOfDatebase()
+        {
+            if (string.IsNullOrEmpty(this.DatabaseLocation) == false)
+            {
+                using (DatabaseSearcher ds = new DatabaseSearcher(this.DatabaseLocation))
+                {
+                    if (await ds.SearchDatabaseAsync() == false)
+                    {
+                        this.BtnAddDatabase.IsEnabled = false;
+                        this.BtnInfo.IsEnabled = false;
+                        this.BtnDatabaseDelete.IsEnabled = false;
+                        this.BtnDatabaseStart.IsEnabled = false;
+                        this.CurrentControl.Value = new AddNewDatabaseUC();
+                        if (await ds.SearchDatabaseAsync() == true)
+                        {
+                            this.BtnAddDatabase.IsEnabled = true;
+                            this.BtnInfo.IsEnabled = true;
+                            this.BtnDatabaseDelete.IsEnabled = true;
+                            this.BtnDatabaseStart.IsEnabled = true;
+                        }
+                    }
+                    else
+                    {
+                        this.BtnAddDatabase.IsEnabled = true;
+                        this.BtnInfo.IsEnabled = true;
+                        this.BtnDatabaseDelete.IsEnabled = true;
+                        this.BtnDatabaseStart.IsEnabled = true;
+                        this.SetCurrentDialog(SelectDialog.SelectDatabase);
+                    }
+                }
             }
         }
     }
