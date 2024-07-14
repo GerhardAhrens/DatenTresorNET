@@ -56,7 +56,7 @@
 
             if (string.IsNullOrEmpty(this.DatabaseLocation) == false)
             {
-                using (DatabaseSearcher ds = new DatabaseSearcher(this.DatabaseLocation, null))
+                using (DatabaseSearcher ds = new DatabaseSearcher(this.DatabaseLocation))
                 {
                     if (await ds.SearchDatabaseAsync() == false)
                     {
@@ -202,7 +202,7 @@
         {
             if (string.IsNullOrEmpty(this.DatabaseLocation) == false)
             {
-                using (DatabaseSearcher ds = new DatabaseSearcher(this.DatabaseLocation,null))
+                using (DatabaseSearcher ds = new DatabaseSearcher(this.DatabaseLocation))
                 {
                     if (await ds.SearchDatabaseAsync() == false)
                     {

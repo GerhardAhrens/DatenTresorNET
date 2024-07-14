@@ -8,8 +8,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    KeyboardNavigation.TabNavigation="Local"
     mc:Ignorable="d">
-    <GroupBox>
+    <GroupBox KeyboardNavigation.IsTabStop="False">
         <GroupBox.Header>
             <Border
                 Background="#F2F2F2"
@@ -23,7 +24,7 @@
             </Border>
         </GroupBox.Header>
 
-        <Grid Margin="10,10" KeyboardNavigation.DirectionalNavigation="Contained">
+        <Grid Margin="10,10" KeyboardNavigation.DirectionalNavigation="Cycle">
             <Grid.RowDefinitions>
                 <RowDefinition Height="60" />
                 <RowDefinition Height="30" />

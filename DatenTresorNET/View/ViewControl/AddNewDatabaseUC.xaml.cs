@@ -27,14 +27,33 @@
             WeakEventManager<TextBox, KeyEventArgs>.AddHandler(this.TxtDescription, "KeyDown", this.OnKeyDown);
             WeakEventManager<PasswordBox, RoutedEventArgs>.AddHandler(this.TxtPassword, "PasswordChanged", this.OnTextChanged);
             WeakEventManager<PasswordBox, RoutedEventArgs>.AddHandler(this.TxtPassword, "Loaded", this.OnTextChanged);
+            WeakEventManager<PasswordBox, KeyEventArgs>.AddHandler(this.TxtPassword, "KeyDown", this.OnKeyDown);
             WeakEventManager<PasswordBox, RoutedEventArgs>.AddHandler(this.TxtPasswordRepeat, "PasswordChanged", this.OnTextChanged);
             WeakEventManager<PasswordBox, RoutedEventArgs>.AddHandler(this.TxtPasswordRepeat, "Loaded", this.OnTextChanged);
+            WeakEventManager<PasswordBox, KeyEventArgs>.AddHandler(this.TxtPasswordRepeat, "KeyDown", this.OnKeyDown);
+        }
+
+        private string DatabaseLocation { get; set; }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            this.TxtDatabaseName.Focus();
+            this.txtNotes.Text = string.Empty;
+
+            using (ApplicationSettings settings = new ApplicationSettings())
+            {
+                if (settings.IsExitSettings() == true)
+                {
+                    settings.Load();
+                    this.DatabaseLocation = settings.DatabaseFolder;
+                }
+            }
         }
 
         private void OnTextChanged(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(this.TxtDatabaseName.Text) == true 
-                || string.IsNullOrEmpty(this.TxtPassword.Password) == true 
+            if (string.IsNullOrEmpty(this.TxtDatabaseName.Text) == true
+                || string.IsNullOrEmpty(this.TxtPassword.Password) == true
                 || string.IsNullOrEmpty(this.TxtPasswordRepeat.Password) == true)
             {
                 this.BtnYes.IsEnabled = false;
@@ -54,27 +73,20 @@
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter & (sender as TextBox).AcceptsReturn == false)
+            if ((sender as TextBox) != null)
             {
-                this.MoveToNextUIElement(e);
-            }
-        }
-
-        private string DatabaseLocation { get; set; }
-
-        private void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            this.txtNotes.Text = string.Empty;
-
-            using (ApplicationSettings settings = new ApplicationSettings())
-            {
-                if (settings.IsExitSettings() == true)
+                if ((e.Key == Key.Enter || e.Key == Key.Tab) & (sender as TextBox).AcceptsReturn == false)
                 {
-                    settings.Load();
-                    this.DatabaseLocation = settings.DatabaseFolder;
+                    this.MoveToNextUIElement(e);
                 }
             }
-
+            else if ((sender as PasswordBox) != null)
+            {
+                if ((e.Key == Key.Enter || e.Key == Key.Tab) & (sender as PasswordBox) != null)
+                {
+                    this.MoveToNextUIElement(e);
+                }
+            }
         }
 
         private void OnButtonClickYes(object sender, RoutedEventArgs e)
@@ -100,7 +112,7 @@
 
         private void CreateNewDatabase()
         {
-            string dataBase = this.TxtDatabaseName.Text;
+            string dataBase = this.TxtDatabaseName.Text.Trim();
             string password = this.TxtPassword.Password;
             string fullName = System.IO.Path.Combine(this.DatabaseLocation, $"{dataBase}.db");
 
@@ -125,6 +137,33 @@
                 collection.Insert(di);
                 litedb.Commit();
             }
+
+            using (ApplicationSettings settings = new ApplicationSettings())
+            {
+                if (settings.IsExitSettings() == true)
+                {
+                    settings.Load();
+                }
+
+                if (settings.Databases == null)
+                {
+                    settings.Databases = new List<DatabaseParameter>();
+                }
+
+                if (settings.Databases.Any(a => a.DatabaseName.Contains(dataBase.Trim())) == true)
+                {
+                    settings.Databases.Remove(settings.Databases.Single(s => s.DatabaseName.Contains(dataBase)));
+                }
+
+                DatabaseParameter dp = new DatabaseParameter();
+                dp.DatabaseName = dataBase;
+                dp.DatabaseFolder = this.DatabaseLocation;
+                dp.Description = this.TxtDescription.Text;
+                dp.PasswordHash = this.TxtPassword.Password;
+                settings.Databases.Add(dp);
+                settings.Save();
+            }
+
         }
 
         private void MoveToNextUIElement(KeyEventArgs e)

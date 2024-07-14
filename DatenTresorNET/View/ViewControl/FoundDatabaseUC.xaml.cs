@@ -45,7 +45,7 @@
                 }
             }
 
-            using (DatabaseSearcher ds = new DatabaseSearcher(this.DatabaseLocation, this.TxtCurrentPassword.Password))
+            using (DatabaseSearcher ds = new DatabaseSearcher(this.DatabaseLocation))
             {
                 if (await ds.SearchDatabaseAsync() == true)
                 {
@@ -57,10 +57,13 @@
 
         private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            DatabaseParameter current = e.AddedItems[0] as DatabaseParameter;
-            if (current != null)
+            if (e.AddedItems.Count > 0)
             {
-                App.EventAgg.Publish<SelectDatabaseEventArgs>(new SelectDatabaseEventArgs { Sender = typeof(FoundDatabaseUC), SelectDatabase = current });
+                DatabaseParameter current = e.AddedItems[0] as DatabaseParameter;
+                if (current != null)
+                {
+                    App.EventAgg.Publish<SelectDatabaseEventArgs>(new SelectDatabaseEventArgs { Sender = typeof(FoundDatabaseUC), SelectDatabase = current });
+                }
             }
         }
 

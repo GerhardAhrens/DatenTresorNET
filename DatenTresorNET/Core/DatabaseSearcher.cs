@@ -32,10 +32,9 @@ namespace DatenTresorNET.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="DatabaseSearcher"/> class.
         /// </summary>
-        public DatabaseSearcher(string databaseLocation, string password)
+        public DatabaseSearcher(string databaseLocation)
         {
             this.DatabaseLocation = databaseLocation;
-            this.Passwort = password;
         }
 
          ~DatabaseSearcher()
@@ -48,8 +47,6 @@ namespace DatenTresorNET.Core
         public DatabaseParameter DatabaseNameSelected { get; private set; }
 
         private string DatabaseLocation { get; set; }
-
-        public string Passwort { get; private set; }
 
         public async Task<bool> SearchDatabaseAsync()
         {
@@ -76,12 +73,23 @@ namespace DatenTresorNET.Core
                     this.DatabaseNamesSource = new List<DatabaseParameter>();
                 }
 
+                using (ApplicationSettings settings = new ApplicationSettings())
+                {
+                    if (settings.IsExitSettings() == true)
+                    {
+                        settings.Load();
+                    }
+
+                    this.DatabaseNamesSource = settings.Databases;
+                }
+
                 foreach (string db in dbs)
                 {
+                    string pw = this.DatabaseNamesSource.Single(s => s.DatabaseName == Path.GetFileNameWithoutExtension(db)).PasswordHash;
                     ConnectionString dbconn = null;
                     using (DBConnectionBuilder builder = new DBConnectionBuilder())
                     {
-                        dbconn = builder.GetConnection(db, this.Passwort);
+                        dbconn = builder.GetConnection(db, pw);
                     }
 
                     LiteDatabase litedb = new LiteDatabase(dbconn);
@@ -98,15 +106,18 @@ namespace DatenTresorNET.Core
                         dbparam.Default = false;
                     }
 
+                    /*
                     dbparam.DatabaseFolder = System.IO.Path.GetDirectoryName(db);
                     dbparam.DatabaseName = System.IO.Path.GetFileName(db);
                     dbparam.Description = dbinfo.Description;
-                    dbparam.PasswordHash = this.Passwort;
+                    dbparam.PasswordHash = string.Empty;
                     this.DatabaseNamesSource.Add(dbparam);
+                    */
                     litedb.Dispose();
                     litedb = null;
                 }
 
+                /*
                 using (ApplicationSettings settings = new ApplicationSettings())
                 {
                     if (settings.IsExitSettings() == true)
@@ -137,7 +148,6 @@ namespace DatenTresorNET.Core
                             settings.Save();
                         }
                     }
-
                     foreach (DatabaseParameter item in this.DatabaseNamesSource)
                     {
                         if (settings.Databases.Count() == 1)
@@ -157,7 +167,7 @@ namespace DatenTresorNET.Core
                         this.DatabaseNameSelected = this.DatabaseNamesSource.FirstOrDefault();
                     }
                 }
-
+                */
                 result = true;
             }
             else
