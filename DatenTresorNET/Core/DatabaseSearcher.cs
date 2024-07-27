@@ -73,107 +73,20 @@ namespace DatenTresorNET.Core
                     this.DatabaseNamesSource = new List<DatabaseParameter>();
                 }
 
-                using (ApplicationSettings settings = new ApplicationSettings())
-                {
-                    if (settings.IsExitSettings() == true)
-                    {
-                        settings.Load();
-                    }
-
-                    this.DatabaseNamesSource = settings.Databases;
-                }
-
                 foreach (string db in dbs)
                 {
-                    string pw = this.DatabaseNamesSource.Single(s => s.DatabaseName == Path.GetFileNameWithoutExtension(db)).PasswordHash;
-                    ConnectionString dbconn = null;
-                    using (DBConnectionBuilder builder = new DBConnectionBuilder())
-                    {
-                        dbconn = builder.GetConnection(db, pw);
-                    }
-
-                    LiteDatabase litedb = new LiteDatabase(dbconn);
-                    ILiteCollection<DatabaseInformation> databaseInformationCollection = litedb.GetCollection<DatabaseInformation>(typeof(DatabaseInformation).Name);
-                    DatabaseInformation dbinfo = databaseInformationCollection.FindAll().First();
-
                     DatabaseParameter dbparam = new DatabaseParameter();
-                    if (dbs.Count() == 1)
-                    {
-                        dbparam.Default = true;
-                    }
-                    else
-                    {
-                        dbparam.Default = false;
-                    }
-
-                    /*
                     dbparam.DatabaseFolder = System.IO.Path.GetDirectoryName(db);
                     dbparam.DatabaseName = System.IO.Path.GetFileName(db);
-                    dbparam.Description = dbinfo.Description;
-                    dbparam.PasswordHash = string.Empty;
+                    dbparam.Description = System.IO.Path.GetFileNameWithoutExtension(db); ;
                     this.DatabaseNamesSource.Add(dbparam);
-                    */
-                    litedb.Dispose();
-                    litedb = null;
                 }
 
-                /*
-                using (ApplicationSettings settings = new ApplicationSettings())
-                {
-                    if (settings.IsExitSettings() == true)
-                    {
-                        settings.Load();
-                    }
-
-                    if (settings.Databases?.Count() != dbs.Count())
-                    {
-                        if (settings.Databases == null)
-                        {
-                            settings.Databases = new List<DatabaseParameter>();
-                        }
-
-                        settings.Databases?.Clear();
-                        if (this.DatabaseNamesSource != null)
-                        {
-                            foreach (DatabaseParameter item in this.DatabaseNamesSource)
-                            {
-                                DatabaseParameter dp = new DatabaseParameter();
-                                dp.DatabaseName = item.DatabaseName;
-                                dp.DatabaseFolder = this.DatabaseLocation;
-                                dp.Description = item.Description;
-                                dp.PasswordHash = item.PasswordHash;
-                                settings.Databases.Add(dp);
-                            }
-
-                            settings.Save();
-                        }
-                    }
-                    foreach (DatabaseParameter item in this.DatabaseNamesSource)
-                    {
-                        if (settings.Databases.Count() == 1)
-                        {
-                            item.Default = true;
-                            break;
-                        }
-                    }
-
-                    this.DatabaseNamesSource = this.DatabaseNamesSource.OrderBy(x => x.Default).ToList();
-                    if (this.DatabaseNamesSource.FirstOrDefault(f => f.Default == true) != null)
-                    {
-                        this.DatabaseNameSelected = this.DatabaseNamesSource.FirstOrDefault(f => f.Default == true);
-                    }
-                    else
-                    {
-                        this.DatabaseNameSelected = this.DatabaseNamesSource.FirstOrDefault();
-                    }
-                }
-                */
                 result = true;
             }
             else
             {
                 StatusbarContent.DatabaseInfo = "Keine Datenbank vorhanden!";
-                Task.Delay(5000);
             }
 
             return result;

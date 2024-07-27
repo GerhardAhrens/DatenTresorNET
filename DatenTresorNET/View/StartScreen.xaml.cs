@@ -39,6 +39,8 @@
 
         public XamlProperty<UserControl> CurrentControl { get; set; } = XamlProperty.Set<UserControl>();
 
+        public string PasswordHash { get; private set; }
+
         private string DatabaseLocation { get; set; }
 
         private DatabaseParameter CurrentSelectedDatabase { get; set; }
@@ -68,13 +70,17 @@
                         if (await ds.SearchDatabaseAsync() == true)
                         {
                             this.BtnAddDatabase.IsEnabled = true;
-                            this.BtnInfo.IsEnabled = true;
-                            this.BtnDatabaseDelete.IsEnabled = true;
-                            this.BtnDatabaseStart.IsEnabled = true;
+                            this.BtnInfo.IsEnabled = false;
+                            this.BtnDatabaseDelete.IsEnabled = false;
+                            this.BtnDatabaseStart.IsEnabled = false;
                         }
                     }
                     else
                     {
+                        this.BtnAddDatabase.IsEnabled = true;
+                        this.BtnInfo.IsEnabled = false;
+                        this.BtnDatabaseDelete.IsEnabled = false;
+                        this.BtnDatabaseStart.IsEnabled = false;
                         this.SetCurrentDialog(SelectDialog.SelectDatabase);
                     }
                 }
@@ -111,6 +117,24 @@
         private void SetDatabase(SelectDatabaseEventArgs args)
         {
             this.CurrentSelectedDatabase = args.SelectDatabase;
+            if (this.CurrentSelectedDatabase == null)
+            {
+                this.BtnAddDatabase.IsEnabled = true;
+                this.BtnInfo.IsEnabled = false;
+                this.BtnDatabaseDelete.IsEnabled = false;
+                this.BtnDatabaseStart.IsEnabled = false;
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(this.CurrentSelectedDatabase.DatabaseName) == false)
+                {
+                    this.BtnAddDatabase.IsEnabled = true;
+                    this.BtnInfo.IsEnabled = true;
+                    this.BtnDatabaseDelete.IsEnabled = true;
+                    this.BtnDatabaseStart.IsEnabled = true;
+                    this.PasswordHash = args.PasswordHash;
+                }
+            }
         }
 
         private void SetMessageQuestion(MessageEventArgs args)
@@ -137,10 +161,19 @@
                 this.CheckOfDatebase();
                 this.SetCurrentDialog(SelectDialog.SelectDatabase);
             }
-            if (args.Sender == typeof(AddNewDatabaseUC) && args.MsgQuestion == MessageQuestion.Add)
+            else if (args.Sender == typeof(FoundDatabaseUC) && args.MsgQuestion == MessageQuestion.DatabaseInfo)
+            {
+
+            }
+            else if (args.Sender == typeof(AddNewDatabaseUC) && args.MsgQuestion == MessageQuestion.Add)
             {
                 this.CheckOfDatebase();
                 this.SetCurrentDialog(SelectDialog.SelectDatabase);
+            }
+            else if (args.Sender == typeof(AddNewDatabaseUC) && args.MsgQuestion == MessageQuestion.NoDatabase)
+            {
+                this.DialogResult = false;
+                this.Close();
             }
             else
             {
@@ -166,10 +199,10 @@
         {
             if (this.CurrentSelectedDatabase != null)
             {
-                string dbname = this.CurrentSelectedDatabase.DatabaseName;
+                string dbname = this.CurrentSelectedDatabase.Fullname;
                 QuestionDlg msgDlg = new QuestionDlg();
                 msgDlg.Title = "Information zur ausgewählten Datenbank";
-                msgDlg.Description = $"Info.";
+                msgDlg.Description = $"Datenbankname: {dbname}";
                 msgDlg.DescFontWeight = FontWeights.Bold;
                 msgDlg.ShowButtonNo = false;
                 msgDlg.ShowButtonYes = true;

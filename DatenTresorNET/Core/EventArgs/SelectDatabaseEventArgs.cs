@@ -28,5 +28,7 @@ namespace DatenTresorNET.Core
         public Type Sender { get; set; }
 
         public DatabaseParameter SelectDatabase { get; set; }
+
+        public string PasswordHash { get; set; }
     }
 }

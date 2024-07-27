@@ -35,5 +35,8 @@ namespace DatenTresorNET.Core
         Ok = 4,
         Delete = 5,
         Add = 6,
+        NoPassword = 7,
+        NoDatabase = 8,
+        DatabaseInfo = 9,
     }
 }

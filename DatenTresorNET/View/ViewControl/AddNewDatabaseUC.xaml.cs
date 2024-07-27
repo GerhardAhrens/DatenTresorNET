@@ -104,8 +104,16 @@
         {
             MessageEventArgs args = new MessageEventArgs();
             args.Sender = typeof(AddNewDatabaseUC);
-            args.MsgQuestion = MessageQuestion.No;
-            args.CurrentDatabase = null;
+            if (string.IsNullOrEmpty(this.TxtDatabaseName.Text) == false)
+            {
+                args.MsgQuestion = MessageQuestion.No;
+                args.CurrentDatabase = null;
+            }
+            else
+            {
+                args.MsgQuestion = MessageQuestion.NoDatabase;
+                args.CurrentDatabase = null;
+            }
 
             App.EventAgg.Publish<MessageEventArgs>(args);
         }
@@ -134,36 +142,12 @@
                 di.CreatedBy = UserInfo.TS().CurrentUser;
                 di.CreatedOn = UserInfo.TS().CurrentTime;
                 ILiteCollection<DatabaseInformation> collection = litedb.GetCollection<DatabaseInformation>(typeof(DatabaseInformation).Name);
-                collection.Insert(di);
-                litedb.Commit();
+                if (collection != null)
+                {
+                    collection.Insert(di);
+                    litedb.Commit();
+                }
             }
-
-            using (ApplicationSettings settings = new ApplicationSettings())
-            {
-                if (settings.IsExitSettings() == true)
-                {
-                    settings.Load();
-                }
-
-                if (settings.Databases == null)
-                {
-                    settings.Databases = new List<DatabaseParameter>();
-                }
-
-                if (settings.Databases.Any(a => a.DatabaseName.Contains(dataBase.Trim())) == true)
-                {
-                    settings.Databases.Remove(settings.Databases.Single(s => s.DatabaseName.Contains(dataBase)));
-                }
-
-                DatabaseParameter dp = new DatabaseParameter();
-                dp.DatabaseName = dataBase;
-                dp.DatabaseFolder = this.DatabaseLocation;
-                dp.Description = this.TxtDescription.Text;
-                dp.PasswordHash = this.TxtPassword.Password;
-                settings.Databases.Add(dp);
-                settings.Save();
-            }
-
         }
 
         private void MoveToNextUIElement(KeyEventArgs e)

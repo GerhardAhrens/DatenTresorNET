@@ -54,22 +54,23 @@
 
             <ComboBox
                 x:Name="cbDatabaseNamesSource"
-                Grid.Row="1"
+                Grid.RowSpan="2"
                 Grid.Column="1"
-                Grid.ColumnSpan="2"
                 Width="400"
+                Margin="0,59,0,1"
                 HorizontalAlignment="Left"
                 VerticalContentAlignment="Center"
                 FontSize="14"
                 ItemsSource="{Binding Path=DatabaseNamesSource.Value, UpdateSourceTrigger=PropertyChanged}"
-                SelectedIndex="0"
+                SelectedIndex="1"
+                SelectedValuePath="DatabaseName"
                 SelectedItem="{Binding Path=DatabaseNameSelected.Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock FontWeight="Medium" Text="{Binding Path=Description}">
+                        <TextBlock FontWeight="Medium" Text="{Binding Path=DatabaseName}">
                             <Run Text="  " />
                             <Run Text="(" />
-                            <Run Text="{Binding Path=DatabaseName}" />
+                            <Run Text="{Binding Path=Description}" />
                             <Run Text=")" />
                         </TextBlock>
                     </DataTemplate>

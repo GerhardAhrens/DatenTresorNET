@@ -1,13 +1,13 @@
 ﻿namespace DatenTresorNET.View.ViewControl
 {
     using System;
-    using System.CodeDom;
     using System.IO;
     using System.Windows;
     using System.Windows.Controls;
 
     using DatenTresorNET.BaseFunction;
     using DatenTresorNET.Core;
+    using DatenTresorNET.Model;
 
     using LiteDB;
 
@@ -82,27 +82,40 @@
             Window window = Application.Current.Windows.Cast<Window>().Single(s => s.GetType() == typeof(StartScreen));
             if (window.IsActive == true)
             {
-                window.DialogResult = true;
-                window.Close();
-
-                using (ApplicationSettings settings = new ApplicationSettings())
+                if (DatabaseNameSelected.Value != null)
                 {
-                    if (settings.IsExitSettings() == true)
+                    if (string.IsNullOrEmpty(this.TxtCurrentPassword.Password) == false)
                     {
-                        settings.Load();
-                    }
+                        string dataBase = DatabaseNameSelected.Value.Fullname.Trim();
+                        string password = this.TxtCurrentPassword.Password;
+                        string fullName = Path.Combine(this.DatabaseLocation, $"{dataBase}.db");
 
-                    if (settings.Databases?.Any() == true)
-                    {
-                        foreach (DatabaseParameter dbParam in settings.Databases)
+                        ConnectionString dbconn = null;
+                        using (DBConnectionBuilder builder = new DBConnectionBuilder())
                         {
-                            dbParam.Default = false;
+                            dbconn = builder.GetConnection(fullName, password);
                         }
 
-                        string selectedName = this.DatabaseNameSelected.Value.DatabaseName;
-                        DatabaseParameter dp = settings.Databases.First(f => f.DatabaseName.ToLower() == selectedName.ToLower());
-                        dp.Default = true;
-                        settings.Save();
+                        if (dbconn != null)
+                        {
+                            try
+                            {
+                                LiteDatabase litedb = new LiteDatabase(dbconn);
+                                if (litedb != null)
+                                {
+                                    ILiteCollection<DatabaseInformation> collection = litedb.GetCollection<DatabaseInformation>(typeof(DatabaseInformation).Name);
+                                    DatabaseInformation databaseInfo = collection.FindAll().FirstOrDefault();
+
+                                    window.DialogResult = true;
+                                    window.Close();
+                                }
+                            }
+                            catch (Exception)
+                            {
+                                throw;
+                            }
+
+                        }
                     }
                 }
             }
